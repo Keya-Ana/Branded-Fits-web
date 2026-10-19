@@ -1,0 +1,31 @@
+  
+        body {
+            background-color: #FDFBF7;
+            color: #1A1A1A;
+            font-family: 'Inter', sans-serif;
+        }
+        .heading-serif {
+            font-family: 'Playfair Display', serif;
+        }
+        /* Hide scrollbars for clean UI where needed */
+        .no-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .no-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+        .active-nav {
+            border-bottom: 2px solid #C89D66;
+            color: #C89D66;
+            font-weight: 600;
+        }
+        /* Toast notification animation */
+        @keyframes slideIn {
+            from { transform: translateY(-100%); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+        .toast-animate {
+            animation: slideIn 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        }
+    

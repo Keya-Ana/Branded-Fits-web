@@ -1,0 +1,1391 @@
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    <!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Branded Fits - Look Good · Feel Good · Repeat</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts: Playfair Display for headers & Inter for body -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,600;0,700;1,400&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <script src="{{ url_for('static', filename='script.js') }}"></script>
+    <script src="https://js.paystack.co/v1/inline.js"></script>
+</head>
+<body class="min-h-screen flex flex-col justify-between selection:bg-brand-gold selection:text-white">
+
+    <!-- TOP ANNOUNCEMENT BAR -->
+    <div class="bg-brand-dark text-white text-xs py-2 px-4 text-center font-medium tracking-wide flex justify-between items-center px-6">
+        <span class="hidden sm:inline">✨ Nationwide Express Delivery Across Ghana | Pay with MoMo or Card</span>
+        <span class="w-full sm:w-auto text-center">Ghanaian Owned & Operated 🇬🇭 · Fast & Reliable</span>
+        <span class="hidden md:inline font-mono text-brand-gold">Helpline: +233 55 123 4567</span>
+    </div>
+
+    <!-- MAIN HEADER / NAVBAR -->
+    <header class="sticky top-0 z-40 bg-brand-cream/95 backdrop-blur-md border-b border-brand-border transition-all">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-20">
+                
+                <!-- Mobile menu button -->
+                <button id="mobileMenuBtn" onclick="toggleMobileMenu()" class="md:hidden p-2 text-brand-dark focus:outline-none">
+                    <i class="fa-solid fa-bars text-xl"></i>
+                </button>
+
+                <!-- BRAND LOGO -->
+                <div class="flex items-center cursor-pointer" onclick="navigateTo('home')">
+                    <div class="flex flex-col items-center">
+                        <div class="flex items-center space-x-2">
+                            <!-- Hanger Icon -->
+                            <div class="w-8 h-8 border-2 border-brand-dark rounded-full flex items-center justify-center bg-brand-sand">
+                                <i class="fa-solid fa-shirt text-brand-dark text-sm"></i>
+                            </div>
+                            <span class="text-2xl font-bold tracking-widest heading-serif text-brand-dark">BRANDED FITS</span>
+                        </div>
+                        <span class="text-[9px] tracking-[0.25em] text-brand-gold font-semibold uppercase -mt-1">Look Good · Feel Good · Repeat</span>
+                    </div>
+                </div>
+
+                <!-- DESKTOP NAVIGATION -->
+                <nav class="hidden md:flex space-x-8 text-sm font-medium">
+                    <button onclick="navigateTo('home')" id="nav-home" class="nav-link text-brand-dark hover:text-brand-gold py-2 transition-colors active-nav">Home</button>
+                    <button onclick="navigateTo('shop')" id="nav-shop" class="nav-link text-brand-dark hover:text-brand-gold py-2 transition-colors">Shop All</button>
+                    <button onclick="navigateTo('orders')" id="nav-orders" class="nav-link text-brand-dark hover:text-brand-gold py-2 transition-colors">My Orders</button>
+                    <button onclick="navigateTo('admin')" id="nav-admin" class="nav-link text-brand-dark hover:text-brand-gold py-2 transition-colors flex items-center space-x-1">
+                        <i class="fa-solid fa-user-gear text-xs text-brand-gold"></i>
+                        <span>Owner Dashboard</span>
+                    </button>
+                </nav>
+
+                <!-- ACTION ICONS -->
+                <div class="flex items-center space-x-5">
+                    <!-- Search Input Trigger -->
+                    <div class="relative hidden sm:block">
+                        <input type="text" id="searchInput" onkeyup="handleSearch(event)" placeholder="Search outfits..." class="w-36 md:w-48 bg-white border border-brand-border rounded-full py-1.5 pl-8 pr-3 text-xs focus:outline-none focus:border-brand-gold transition-all">
+                        <i class="fa-solid fa-magnifying-glass absolute left-3 top-2.5 text-xs text-gray-400"></i>
+                    </div>
+
+                    <!-- Wishlist -->
+                    <button onclick="showToast('Wishlist saved!')" class="relative p-1 text-brand-dark hover:text-brand-gold transition-colors">
+                        <i class="fa-regular fa-heart text-xl"></i>
+                        <span id="wishlistCount" class="absolute -top-1 -right-1 bg-brand-gold text-white text-[10px] w-4 h-4 rounded-full flex items-center justify-center font-bold">3</span>
+                    </button>
+
+                    <!-- Cart Drawer Trigger -->
+                    <button onclick="navigateTo('cart')" class="relative p-1 text-brand-dark hover:text-brand-gold transition-colors">
+                        <i class="fa-solid fa-bag-shopping text-xl"></i>
+                        <span id="cartCount" class="absolute -top-1 -right-1 bg-brand-dark text-white text-[10px] w-4 h-4 rounded-full flex items-center justify-center font-bold">0</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- MOBILE MENU DROPDOWN -->
+        <div id="mobileMenu" class="hidden md:hidden bg-brand-cream border-b border-brand-border px-4 pt-2 pb-4 space-y-2">
+            <div class="mb-3">
+                <input type="text" onkeyup="handleSearch(event)" placeholder="Search outfits..." class="w-full bg-white border border-brand-border rounded-lg py-2 px-3 text-sm">
+            </div>
+            <button onclick="navigateTo('home'); toggleMobileMenu()" class="block w-full text-left py-2 px-3 rounded hover:bg-brand-sand font-medium">Home</button>
+            <button onclick="navigateTo('shop'); toggleMobileMenu()" class="block w-full text-left py-2 px-3 rounded hover:bg-brand-sand font-medium">Shop All Outfits</button>
+            <button onclick="navigateTo('orders'); toggleMobileMenu()" class="block w-full text-left py-2 px-3 rounded hover:bg-brand-sand font-medium">My Orders</button>
+            <button onclick="navigateTo('admin'); toggleMobileMenu()" class="block w-full text-left py-2 px-3 rounded hover:bg-brand-sand text-brand-gold font-semibold">Owner Dashboard</button>
+        </div>
+    </header>
+
+    <!-- TOAST NOTIFICATION BOX -->
+    <div id="toast" class="fixed top-24 right-5 z-50 hidden bg-brand-dark text-white px-5 py-3 rounded-xl shadow-2xl flex items-center space-x-3 toast-animate border border-brand-gold/30">
+        <i id="toastIcon" class="fa-solid fa-circle-check text-brand-gold text-lg"></i>
+        <span id="toastMessage" class="text-sm font-medium">Item added to your cart</span>
+    </div>
+
+    <!-- MAIN CONTENT CONTAINER FOR SINGLE PAGE APPLICATION VIEWS -->
+    <main id="app" class="flex-grow">
+
+        <!-- ========================================== -->
+        <!-- 1. HOME PAGE VIEW                         -->
+        <!-- ========================================== -->
+        <section id="view-home" class="view-section">
+            <!-- Hero Banner -->
+            <div class="relative bg-brand-sand py-16 md:py-24 px-4 sm:px-6 lg:px-8 overflow-hidden">
+                <div class="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
+                    <div class="z-10 space-y-6 text-center md:text-left">
+                        <span class="inline-block bg-brand-gold/20 text-brand-dark text-xs uppercase tracking-widest font-bold px-3 py-1 rounded-full border border-brand-gold/40">New Season Collection 2026</span>
+                        <h1 class="text-4xl md:text-6xl font-bold heading-serif text-brand-dark leading-tight">
+                            Trendy Outfits <br><span class="italic font-normal text-brand-gold">For Every Mood</span>
+                        </h1>
+                        <p class="text-brand-grayMuted text-base md:text-lg max-w-md mx-auto md:mx-0">
+                            Quality styles. Affordable prices. Fast & reliable delivery across Ghana.
+                        </p>
+                        <div class="pt-2 flex flex-col sm:flex-row justify-center md:justify-start gap-4">
+                            <button onclick="navigateTo('shop')" class="bg-brand-dark text-white hover:bg-brand-gold transition-all duration-300 px-8 py-3.5 rounded-full font-medium tracking-wide shadow-lg flex items-center justify-center space-x-2 group">
+                                <span>Shop Collection Now</span>
+                                <i class="fa-solid fa-arrow-right text-xs group-hover:translate-x-1 transition-transform"></i>
+                            </button>
+                        </div>
+                    </div>
+                    <!-- Hero Image Showcase -->
+                    <div class="relative flex justify-center">
+                        <div class="relative w-full max-w-md aspect-[4/5] rounded-3xl overflow-hidden shadow-2xl border-4 border-white">
+                            <img src="https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?auto=format&fit=crop&q=80&w=800" alt="Trendy Outfits Hero" class="w-full h-full object-cover">
+                            <div class="absolute bottom-4 left-4 right-4 bg-white/90 backdrop-blur-md p-4 rounded-2xl shadow-md border border-white/50">
+                                <p class="text-xs font-bold text-brand-dark uppercase">Featured Fit</p>
+                                <div class="flex justify-between items-center mt-1">
+                                    <span class="text-sm font-semibold">Elegant Silk Set</span>
+                                    <span class="text-sm font-bold text-brand-gold">GH₵ 220</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Value Propositions Bar -->
+            <div class="border-y border-brand-border bg-white py-8">
+                <div class="max-w-7xl mx-auto px-4 grid grid-cols-1 sm:grid-cols-3 gap-6 text-center">
+                    <div class="flex items-center justify-center space-x-4 p-2">
+                        <div class="w-12 h-12 bg-brand-sand rounded-full flex items-center justify-center text-brand-gold text-xl">
+                            <i class="fa-solid fa-shield-halved"></i>
+                        </div>
+                        <div class="text-left">
+                            <h4 class="font-bold text-sm text-brand-dark">Secure Payments</h4>
+                            <p class="text-xs text-brand-grayMuted">MoMo & Ghanaian Banks</p>
+                        </div>
+                    </div>
+                    <div class="flex items-center justify-center space-x-4 p-2">
+                        <div class="w-12 h-12 bg-brand-sand rounded-full flex items-center justify-center text-brand-gold text-xl">
+                            <i class="fa-solid fa-truck-fast"></i>
+                        </div>
+                        <div class="text-left">
+                            <h4 class="font-bold text-sm text-brand-dark">Fast Delivery</h4>
+                            <p class="text-xs text-brand-grayMuted">Nationwide Ghana Shipping</p>
+                        </div>
+                    </div>
+                    <div class="flex items-center justify-center space-x-4 p-2">
+                        <div class="w-12 h-12 bg-brand-sand rounded-full flex items-center justify-center text-brand-gold text-xl">
+                            <i class="fa-solid fa-rotate-left"></i>
+                        </div>
+                        <div class="text-left">
+                            <h4 class="font-bold text-sm text-brand-dark">Easy Returns</h4>
+                            <p class="text-xs text-brand-grayMuted">Within 7 Days Support</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Featured Collection -->
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+                <div class="flex justify-between items-end mb-8">
+                    <div>
+                        <span class="text-xs font-bold text-brand-gold uppercase tracking-wider">Curated Styles</span>
+                        <h2 class="text-3xl font-bold heading-serif text-brand-dark mt-1">Featured Outfits</h2>
+                    </div>
+                    <button onclick="navigateTo('shop')" class="text-sm font-semibold text-brand-dark hover:text-brand-gold flex items-center space-x-1">
+                        <span>View All</span>
+                        <i class="fa-solid fa-chevron-right text-xs"></i>
+                    </button>
+                </div>
+                <!-- Featured Grid -->
+                <div id="featuredGrid" class="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6">
+                    <!-- Dynamic rendering via JS -->
+                </div>
+            </div>
+        </section>
+
+        <!-- ========================================== -->
+        <!-- 2. SHOP / ALL OUTFITS VIEW                 -->
+        <!-- ========================================== -->
+        <section id="view-shop" class="view-section hidden py-8 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="mb-6 flex flex-col md:flex-row justify-between items-start md:items-center pb-4 border-b border-brand-border gap-4">
+                <div>
+                    <h1 class="text-2xl md:text-3xl font-bold heading-serif">All Outfits</h1>
+                    <p class="text-xs text-brand-grayMuted">Browse our latest fashionable apparel collection</p>
+                </div>
+                <!-- Sort Dropdown -->
+                <div class="flex items-center space-x-2">
+                    <label class="text-xs font-medium text-brand-grayMuted">Sort by:</label>
+                    <select id="sortSelect" onchange="applyFilters()" class="bg-white border border-brand-border text-xs rounded-lg p-2 font-medium focus:outline-none focus:border-brand-gold">
+                        <option value="newest">Newest First</option>
+                        <option value="price-low">Price: Low to High</option>
+                        <option value="price-high">Price: High to Low</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
+                <!-- SIDEBAR FILTERS -->
+                <aside class="space-y-6 bg-white p-5 rounded-2xl border border-brand-border h-fit">
+                    <div>
+                        <h3 class="font-bold text-sm text-brand-dark mb-3 uppercase tracking-wider">Categories</h3>
+                        <div class="space-y-2 text-sm text-brand-grayMuted" id="categoryFilters">
+                            <label class="flex items-center space-x-2 cursor-pointer hover:text-brand-dark">
+                                <input type="radio" name="category" value="all" checked onchange="applyFilters()" class="accent-brand-gold">
+                                <span>All Categories</span>
+                            </label>
+                            <label class="flex items-center space-x-2 cursor-pointer hover:text-brand-dark">
+                                <input type="radio" name="category" value="Dresses" onchange="applyFilters()" class="accent-brand-gold">
+                                <span>Dresses</span>
+                            </label>
+                            <label class="flex items-center space-x-2 cursor-pointer hover:text-brand-dark">
+                                <input type="radio" name="category" value="Tops" onchange="applyFilters()" class="accent-brand-gold">
+                                <span>Tops</span>
+                            </label>
+                            <label class="flex items-center space-x-2 cursor-pointer hover:text-brand-dark">
+                                <input type="radio" name="category" value="Co-ords" onchange="applyFilters()" class="accent-brand-gold">
+                                <span>Co-ords & Sets</span>
+                            </label>
+                            <label class="flex items-center space-x-2 cursor-pointer hover:text-brand-dark">
+                                <input type="radio" name="category" value="Jumpsuits" onchange="applyFilters()" class="accent-brand-gold">
+                                <span>Jumpsuits</span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="border-t border-brand-border pt-4">
+                        <h3 class="font-bold text-sm text-brand-dark mb-3 uppercase tracking-wider">Size</h3>
+                        <div class="flex flex-wrap gap-2" id="sizeFilters">
+                            <button onclick="toggleSizeFilter('XS', this)" class="size-btn w-9 h-9 rounded-lg border border-brand-border text-xs font-semibold hover:border-brand-gold transition-colors">XS</button>
+                            <button onclick="toggleSizeFilter('S', this)" class="size-btn w-9 h-9 rounded-lg border border-brand-border text-xs font-semibold hover:border-brand-gold transition-colors">S</button>
+                            <button onclick="toggleSizeFilter('M', this)" class="size-btn w-9 h-9 rounded-lg border border-brand-border text-xs font-semibold hover:border-brand-gold transition-colors">M</button>
+                            <button onclick="toggleSizeFilter('L', this)" class="size-btn w-9 h-9 rounded-lg border border-brand-border text-xs font-semibold hover:border-brand-gold transition-colors">L</button>
+                            <button onclick="toggleSizeFilter('XL', this)" class="size-btn w-9 h-9 rounded-lg border border-brand-border text-xs font-semibold hover:border-brand-gold transition-colors">XL</button>
+                        </div>
+                    </div>
+
+                    <div class="border-t border-brand-border pt-4">
+                        <div class="flex justify-between items-center mb-2">
+                            <h3 class="font-bold text-sm text-brand-dark uppercase tracking-wider">Max Price</h3>
+                            <span id="priceValue" class="text-xs font-bold text-brand-gold">GH₵ 400</span>
+                        </div>
+                        <input type="range" id="priceRange" min="50" max="400" step="10" value="400" oninput="updatePriceFilter(this.value)" class="w-full accent-brand-gold">
+                        <div class="flex justify-between text-[10px] text-brand-grayMuted mt-1">
+                            <span>GH₵ 50</span>
+                            <span>GH₵ 400</span>
+                        </div>
+                    </div>
+
+                    <button onclick="resetFilters()" class="w-full text-center text-xs font-semibold text-brand-gold hover:underline pt-2">
+                        Reset All Filters
+                    </button>
+                </aside>
+
+                <!-- SHOP PRODUCT GRID -->
+                <main class="md:col-span-3">
+                    <div id="shopGrid" class="grid grid-cols-2 sm:grid-cols-3 gap-4 md:gap-6">
+                        <!-- Rendered dynamically -->
+                    </div>
+                </main>
+            </div>
+        </section>
+
+        <!-- ========================================== -->
+        <!-- 3. PRODUCT DETAIL PAGE VIEW                -->
+        <!-- ========================================== -->
+        <section id="view-product" class="view-section hidden py-10 max-w-6xl mx-auto px-4">
+            <button onclick="navigateTo('shop')" class="mb-6 inline-flex items-center space-x-2 text-xs font-bold uppercase tracking-wider text-brand-grayMuted hover:text-brand-dark">
+                <i class="fa-solid fa-arrow-left"></i>
+                <span>Back to Shop</span>
+            </button>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-10 bg-white p-6 md:p-10 rounded-3xl border border-brand-border shadow-sm">
+                <!-- Gallery -->
+                <div class="space-y-4">
+                    <div class="aspect-[3/4] rounded-2xl overflow-hidden bg-brand-sand border border-brand-border">
+                        <img id="detailImg" src="" alt="Product Detail" class="w-full h-full object-cover">
+                    </div>
+                </div>
+
+                <!-- Product Info -->
+                <div class="flex flex-col justify-between space-y-6">
+                    <div>
+                        <span id="detailCategory" class="text-xs uppercase tracking-widest text-brand-gold font-bold">Category</span>
+                        <h1 id="detailTitle" class="text-3xl font-bold heading-serif text-brand-dark mt-1">Product Title</h1>
+                        
+                        <div class="flex items-center space-x-3 mt-2">
+                            <span id="detailPrice" class="text-2xl font-bold text-brand-dark">GH₵ 0</span>
+                            <div class="flex items-center text-amber-400 text-xs space-x-1">
+                                <i class="fa-solid fa-star"></i>
+                                <i class="fa-solid fa-star"></i>
+                                <i class="fa-solid fa-star"></i>
+                                <i class="fa-solid fa-star"></i>
+                                <i class="fa-solid fa-star-half-stroke"></i>
+                                <span class="text-brand-grayMuted text-xs ml-1">(12 customer reviews)</span>
+                            </div>
+                        </div>
+
+                        <p id="detailDesc" class="text-sm text-brand-grayMuted mt-4 leading-relaxed">
+                            Crafted with high-quality, breathable fabric designed to give you a polished and comfortable fit for all casual and semi-formal occasions.
+                        </p>
+
+                        <!-- Size selection -->
+                        <div class="mt-6">
+                            <label class="block text-xs font-bold uppercase tracking-wider text-brand-dark mb-2">Select Size</label>
+                            <div class="flex space-x-3" id="detailSizes">
+                                <button onclick="selectDetailSize('S', this)" class="detail-size-btn border border-brand-border rounded-lg w-10 h-10 text-xs font-semibold hover:border-brand-gold">S</button>
+                                <button onclick="selectDetailSize('M', this)" class="detail-size-btn border-2 border-brand-gold bg-brand-gold/10 rounded-lg w-10 h-10 text-xs font-semibold">M</button>
+                                <button onclick="selectDetailSize('L', this)" class="detail-size-btn border border-brand-border rounded-lg w-10 h-10 text-xs font-semibold hover:border-brand-gold">L</button>
+                                <button onclick="selectDetailSize('XL', this)" class="detail-size-btn border border-brand-border rounded-lg w-10 h-10 text-xs font-semibold hover:border-brand-gold">XL</button>
+                            </div>
+                        </div>
+
+                        <!-- Color swatch preview -->
+                        <div class="mt-6">
+                            <label class="block text-xs font-bold uppercase tracking-wider text-brand-dark mb-2">Color Options</label>
+                            <div class="flex space-x-3">
+                                <div class="w-6 h-6 rounded-full bg-emerald-800 ring-2 ring-offset-2 ring-emerald-800 cursor-pointer"></div>
+                                <div class="w-6 h-6 rounded-full bg-amber-700 cursor-pointer"></div>
+                                <div class="w-6 h-6 rounded-full bg-black cursor-pointer"></div>
+                            </div>
+                        </div>
+
+                        <!-- Quantity Selector -->
+                        <div class="mt-6 flex items-center space-x-4">
+                            <label class="text-xs font-bold uppercase tracking-wider text-brand-dark">Quantity</label>
+                            <div class="flex items-center border border-brand-border rounded-lg overflow-hidden bg-brand-sand">
+                                <button onclick="adjustDetailQty(-1)" class="px-3 py-1 font-bold text-brand-dark hover:bg-brand-gold/20">-</button>
+                                <span id="detailQty" class="px-4 py-1 text-sm font-semibold">1</span>
+                                <button onclick="adjustDetailQty(1)" class="px-3 py-1 font-bold text-brand-dark hover:bg-brand-gold/20">+</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Actions -->
+                    <div class="space-y-3 pt-4 border-t border-brand-border">
+                        <div class="grid grid-cols-2 gap-4">
+                            <button id="addToCartBtn" class="w-full bg-brand-dark text-white hover:bg-brand-gold font-medium py-3 rounded-xl transition-colors shadow-md flex justify-center items-center space-x-2">
+                                <i class="fa-solid fa-bag-shopping"></i>
+                                <span>Add To Cart</span>
+                            </button>
+                            <button id="buyNowBtn" class="w-full bg-brand-gold text-white hover:bg-brand-dark font-medium py-3 rounded-xl transition-colors shadow-md">
+                                Buy Now
+                            </button>
+                        </div>
+
+                        <!-- Trust Badges -->
+                        <div class="bg-brand-sand/60 p-4 rounded-xl text-xs space-y-2 text-brand-grayMuted mt-4">
+                            <div class="flex items-center space-x-2">
+                                <i class="fa-solid fa-truck text-brand-gold"></i>
+                                <span>Fast Delivery across Greater Accra & Nationwide</span>
+                            </div>
+                            <div class="flex items-center space-x-2">
+                                <i class="fa-solid fa-money-bill-transfer text-brand-gold"></i>
+                                <span>Pay with MTN MoMo, Telecel Cash or Card</span>
+                            </div>
+                            <div class="flex items-center space-x-2">
+                                <i class="fa-solid fa-arrow-rotate-left text-brand-gold"></i>
+                                <span>7 Days Easy Return Policy</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ========================================== -->
+        <!-- 4. CART PAGE VIEW                          -->
+        <!-- ========================================== -->
+        <section id="view-cart" class="view-section hidden py-10 max-w-5xl mx-auto px-4">
+            <h1 class="text-3xl font-bold heading-serif text-brand-dark mb-6">Your Shopping Bag</h1>
+
+            <div id="cartContent" class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                <!-- Cart Items List Container -->
+                <div id="cartItemsList" class="lg:col-span-2 space-y-4">
+                    <!-- Dynamic rendering -->
+                </div>
+
+                <!-- Order Summary Side Panel -->
+                <div class="bg-white p-6 rounded-2xl border border-brand-border h-fit space-y-4 shadow-sm">
+                    <h3 class="font-bold text-lg heading-serif border-b border-brand-border pb-3">Order Summary</h3>
+                    
+                    <div class="space-y-2 text-sm">
+                        <div class="flex justify-between text-brand-grayMuted">
+                            <span>Subtotal</span>
+                            <span id="cartSubtotal" class="font-semibold text-brand-dark">GH₵ 0</span>
+                        </div>
+                        <div class="flex justify-between text-brand-grayMuted">
+                            <span>Nationwide Delivery Fee</span>
+                            <span id="cartDeliveryFee" class="font-semibold text-brand-dark">GH₵ 20</span>
+                        </div>
+                        <div class="border-t border-brand-border pt-3 flex justify-between font-bold text-base text-brand-dark">
+                            <span>Total</span>
+                            <span id="cartTotal" class="text-brand-gold text-xl">GH₵ 20</span>
+                        </div>
+                    </div>
+
+                    <button onclick="navigateTo('checkout')" class="w-full bg-brand-dark text-white hover:bg-brand-gold py-3.5 rounded-xl font-medium transition-colors shadow-lg flex justify-center items-center space-x-2">
+                        <span>Proceed to Checkout</span>
+                        <i class="fa-solid fa-arrow-right text-xs"></i>
+                    </button>
+                    
+                    <button onclick="navigateTo('shop')" class="w-full text-center text-xs font-semibold text-brand-grayMuted hover:text-brand-dark">
+                        ← Continue Shopping
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- ========================================== -->
+        <!-- 5. CHECKOUT & PAYMENT PAGE VIEW           -->
+        <!-- ========================================== -->
+        <section id="view-checkout" class="view-section hidden py-10 max-w-5xl mx-auto px-4">
+            <h1 class="text-3xl font-bold heading-serif text-brand-dark mb-6">Checkout</h1>
+
+            <form id="checkoutForm" onsubmit="handlePlaceOrder(event)" class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                <div class="lg:col-span-2 space-y-6">
+                    
+                    <!-- Delivery Information -->
+                    <div class="bg-white p-6 rounded-2xl border border-brand-border shadow-sm space-y-4">
+                        <h3 class="font-bold text-lg heading-serif text-brand-dark border-b border-brand-border pb-2">1. Delivery Information</h3>
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                            <div>
+                                <label class="block text-xs font-semibold text-brand-grayMuted mb-1">Full Name *</label>
+                                <input type="text" id="custName" required placeholder="e.g. Ama Mensah" class="w-full border border-brand-border rounded-xl p-2.5 text-sm focus:outline-none focus:border-brand-gold">
+                            </div>
+                            <div>
+                                <label class="block text-xs font-semibold text-brand-grayMuted mb-1">Phone Number (MoMo Enabled) *</label>
+                                <input type="tel" id="custPhone" required placeholder="024 XXX XXXX" class="w-full border border-brand-border rounded-xl p-2.5 text-sm focus:outline-none focus:border-brand-gold">
+                            </div>
+                            <div class="sm:col-span-2">
+                                <label class="block text-xs font-semibold text-brand-grayMuted mb-1">Delivery Address *</label>
+                                <input type="text" id="custAddress" required placeholder="Street Name, House No., Landmark" class="w-full border border-brand-border rounded-xl p-2.5 text-sm focus:outline-none focus:border-brand-gold">
+                            </div>
+                            <div>
+                                <label class="block text-xs font-semibold text-brand-grayMuted mb-1">Region *</label>
+                                <select id="custRegion" class="w-full border border-brand-border rounded-xl p-2.5 text-sm focus:outline-none focus:border-brand-gold bg-white">
+                                    <option value="Greater Accra">Greater Accra</option>
+                                    <option value="Ashanti">Ashanti</option>
+                                    <option value="Central">Central</option>
+                                    <option value="Western">Western</option>
+                                    <option value="Eastern">Eastern</option>
+                                    <option value="Northern">Northern</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label class="block text-xs font-semibold text-brand-grayMuted mb-1">City / Town *</label>
+                                <input type="text" id="custCity" required placeholder="e.g. Accra, Kumasi" class="w-full border border-brand-border rounded-xl p-2.5 text-sm focus:outline-none focus:border-brand-gold">
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Payment Method Selection -->
+                    <div class="bg-white p-6 rounded-2xl border border-brand-border shadow-sm space-y-4">
+                        <h3 class="font-bold text-lg heading-serif text-brand-dark border-b border-brand-border pb-2">2. Payment Method</h3>
+                        
+                        <div class="space-y-3">
+                            <!-- Mobile Money Option -->
+                            <label class="flex items-center justify-between p-4 border border-brand-gold rounded-xl bg-brand-sand/30 cursor-pointer">
+                                <div class="flex items-center space-x-3">
+                                    <input type="radio" name="paymentMethod" value="MoMo" checked class="accent-brand-gold">
+                                    <div>
+                                        <p class="font-bold text-sm text-brand-dark">Ghana Mobile Money (MoMo)</p>
+                                        <p class="text-xs text-brand-grayMuted">MTN Mobile Money, Telecel Cash, AT Money</p>
+                                    </div>
+                                </div>
+                                <span class="text-xs bg-amber-100 text-amber-800 font-bold px-2 py-1 rounded">Instant Prompt</span>
+                            </label>
+
+                            <!-- Bank Transfer Option -->
+                            <label class="flex items-center justify-between p-4 border border-brand-border rounded-xl cursor-pointer hover:border-brand-gold">
+                                <div class="flex items-center space-x-3">
+                                    <input type="radio" name="paymentMethod" value="Bank Transfer / Card" class="accent-brand-gold">
+                                    <div>
+                                        <p class="font-bold text-sm text-brand-dark">Bank Transfer / Debit Card</p>
+                                        <p class="text-xs text-brand-grayMuted">Visa, Mastercard, GCB, Ecobank</p>
+                                    </div>
+                                </div>
+                                <i class="fa-regular fa-credit-card text-brand-grayMuted"></i>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Checkout Summary Side Box -->
+                <div class="bg-white p-6 rounded-2xl border border-brand-border h-fit space-y-4 shadow-sm">
+                    <h3 class="font-bold text-lg heading-serif border-b border-brand-border pb-3">Pay Summary</h3>
+                    
+                    <div id="checkoutSummaryItems" class="space-y-2 text-xs divide-y divide-brand-border/50">
+                        <!-- Dynamic items -->
+                    </div>
+
+                    <div class="border-t border-brand-border pt-3 space-y-2 text-sm">
+                        <div class="flex justify-between text-brand-grayMuted">
+                            <span>Subtotal</span>
+                            <span id="coSubtotal">GH₵ 0</span>
+                        </div>
+                        <div class="flex justify-between text-brand-grayMuted">
+                            <span>Delivery Fee</span>
+                            <span id="coDelivery">GH₵ 20</span>
+                        </div>
+                        <div class="flex justify-between font-bold text-brand-dark text-base border-t border-brand-border pt-2">
+                            <span>Total Payable</span>
+                            <span id="coTotal" class="text-brand-gold text-xl">GH₵ 20</span>
+                        </div>
+                    </div>
+
+                    <button type="submit" class="w-full bg-brand-gold hover:bg-brand-dark text-white font-bold py-3.5 rounded-xl transition-colors shadow-lg">
+                        Place Order Now
+                    </button>
+                </div>
+            </form>
+        </section>
+
+        <!-- ========================================== -->
+        <!-- 6. ORDER SUCCESS / CONFIRMATION VIEW       -->
+        <!-- ========================================== -->
+        <section id="view-success" class="view-section hidden py-16 max-w-xl mx-auto px-4 text-center">
+            <div class="bg-white p-8 rounded-3xl border border-brand-border shadow-md space-y-6">
+                <div class="w-16 h-16 bg-emerald-100 text-emerald-600 rounded-full flex items-center justify-center mx-auto text-3xl">
+                    <i class="fa-solid fa-check"></i>
+                </div>
+                
+                <div>
+                    <h1 class="text-2xl font-bold heading-serif text-brand-dark">Order Placed Successfully!</h1>
+                    <p class="text-xs text-brand-grayMuted mt-1">Thank you for shopping with Branded Fits. Your order is being processed.</p>
+                </div>
+
+                <div class="bg-brand-sand/50 p-4 rounded-xl text-left text-xs space-y-2 font-mono">
+                    <div class="flex justify-between">
+                        <span class="text-brand-grayMuted">Order Number:</span>
+                        <span id="succOrderNo" class="font-bold text-brand-dark">#BF123456</span>
+                    </div>
+                    <div class="flex justify-between">
+                        <span class="text-brand-grayMuted">Total Paid:</span>
+                        <span id="succAmount" class="font-bold text-brand-gold">GH₵ 0</span>
+                    </div>
+                    <div class="flex justify-between">
+                        <span class="text-brand-grayMuted">Payment Method:</span>
+                        <span id="succPayment">Mobile Money (MoMo)</span>
+                    </div>
+                    <div class="flex justify-between">
+                        <span class="text-brand-grayMuted">Estimated Delivery:</span>
+                        <span class="font-bold text-emerald-700">2 - 3 Business Days</span>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-2 gap-3">
+                    <button onclick="navigateTo('orders')" class="w-full bg-brand-dark text-white hover:bg-brand-gold py-3 rounded-xl text-xs font-semibold transition-colors">
+                        View My Orders
+                    </button>
+                    <button onclick="navigateTo('shop')" class="w-full border border-brand-border hover:bg-brand-sand py-3 rounded-xl text-xs font-semibold transition-colors">
+                        Continue Shopping
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- ========================================== -->
+        <!-- 7. MY ACCOUNT / ORDERS VIEW                -->
+        <!-- ========================================== -->
+        <section id="view-orders" class="view-section hidden py-10 max-w-5xl mx-auto px-4">
+            <h1 class="text-3xl font-bold heading-serif text-brand-dark mb-6">My Orders & Purchases</h1>
+
+            <div class="bg-white rounded-2xl border border-brand-border shadow-sm overflow-hidden">
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left text-sm">
+                        <thead class="bg-brand-sand text-xs uppercase text-brand-dark font-bold border-b border-brand-border">
+                            <tr>
+                                <th class="p-4">Order ID</th>
+                                <th class="p-4">Date</th>
+                                <th class="p-4">Delivery To</th>
+                                <th class="p-4">Amount</th>
+                                <th class="p-4">Status</th>
+                            </tr>
+                        </thead>
+                        <tbody id="userOrdersTable" class="divide-y divide-brand-border">
+                            <!-- Rendered dynamically -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+        <!-- ========================================== -->
+        <!-- 8. ADMIN DASHBOARD (OWNER ONLY VIEW)       -->
+        <!-- ========================================== -->
+        <section id="view-admin" class="view-section hidden py-8 max-w-7xl mx-auto px-4">
+            <div class="flex justify-between items-center mb-8 border-b border-brand-border pb-4">
+                <div>
+                    <h1 class="text-3xl font-bold heading-serif text-brand-dark">Owner Dashboard</h1>
+                    <p class="text-xs text-brand-grayMuted">Private store management & live inventory control</p>
+                </div>
+                <span class="bg-brand-dark text-brand-gold text-xs font-mono font-bold px-3 py-1.5 rounded-full">Owner Mode Active</span>
+            </div>
+
+            <!-- Stats Overview -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
+                <div class="bg-white p-5 rounded-2xl border border-brand-border shadow-sm">
+                    <span class="text-xs font-bold text-brand-grayMuted uppercase">Total Orders</span>
+                    <p id="adminStatOrders" class="text-3xl font-bold text-brand-dark mt-1">0</p>
+                </div>
+                <div class="bg-white p-5 rounded-2xl border border-brand-border shadow-sm">
+                    <span class="text-xs font-bold text-brand-grayMuted uppercase">Total Revenue</span>
+                    <p id="adminStatRevenue" class="text-3xl font-bold text-brand-gold mt-1">GH₵ 0</p>
+                </div>
+                <div class="bg-white p-5 rounded-2xl border border-brand-border shadow-sm">
+                    <span class="text-xs font-bold text-brand-grayMuted uppercase">Pending Orders</span>
+                    <p id="adminStatPending" class="text-3xl font-bold text-amber-600 mt-1">0</p>
+                </div>
+                <div class="bg-white p-5 rounded-2xl border border-brand-border shadow-sm">
+                    <span class="text-xs font-bold text-brand-grayMuted uppercase">Active Products</span>
+                    <p id="adminStatProducts" class="text-3xl font-bold text-brand-dark mt-1">0</p>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                <!-- Add Product Form -->
+                <div class="bg-white p-6 rounded-2xl border border-brand-border shadow-sm h-fit space-y-4">
+                    <h3 class="font-bold text-lg heading-serif border-b border-brand-border pb-2">Upload New Product</h3>
+                    <form id="addProductForm" onsubmit="handleAddProduct(event)" class="space-y-3">
+                        <div>
+                            <label class="block text-xs font-semibold text-brand-grayMuted mb-1">Product Title</label>
+                            <input type="text" id="newTitle" required placeholder="e.g. Linen Co-ord Set" class="w-full border border-brand-border rounded-lg p-2 text-xs">
+                        </div>
+                        <div class="grid grid-cols-2 gap-2">
+                            <div>
+                                <label class="block text-xs font-semibold text-brand-grayMuted mb-1">Price (GH₵)</label>
+                                <input type="number" id="newPrice" required placeholder="200" class="w-full border border-brand-border rounded-lg p-2 text-xs">
+                            </div>
+                            <div>
+                                <label class="block text-xs font-semibold text-brand-grayMuted mb-1">Category</label>
+                                <select id="newCategory" class="w-full border border-brand-border rounded-lg p-2 text-xs bg-white">
+                                    <option value="Dresses">Dresses</option>
+                                    <option value="Tops">Tops</option>
+                                    <option value="Co-ords">Co-ords</option>
+                                    <option value="Jumpsuits">Jumpsuits</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div>
+                            <label class="block text-xs font-semibold text-brand-grayMuted mb-1">Image URL</label>
+                            <input type="url" id="newImg" required placeholder="https://images.unsplash.com/..." class="w-full border border-brand-border rounded-lg p-2 text-xs">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-semibold text-brand-grayMuted mb-1">Description</label>
+                            <textarea id="newDesc" rows="2" placeholder="Item details..." class="w-full border border-brand-border rounded-lg p-2 text-xs"></textarea>
+                        </div>
+                        <button type="submit" class="w-full bg-brand-dark text-white hover:bg-brand-gold font-bold py-2.5 rounded-xl text-xs transition-colors">
+                            + Add Product to Store
+                        </button>
+                    </form>
+                </div>
+
+                <!-- Admin Orders and Inventory -->
+                <div class="lg:col-span-2 space-y-8">
+                    <!-- Manage Inventory -->
+                    <div class="bg-white p-6 rounded-2xl border border-brand-border shadow-sm">
+                        <h3 class="font-bold text-lg heading-serif mb-4">Store Inventory</h3>
+                        <div class="overflow-x-auto">
+                            <table class="w-full text-left text-xs">
+                                <thead class="bg-brand-sand text-brand-dark font-bold uppercase border-b border-brand-border">
+                                    <tr>
+                                        <th class="p-3">Product</th>
+                                        <th class="p-3">Category</th>
+                                        <th class="p-3">Price</th>
+                                        <th class="p-3 text-right">Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="adminProductsTable" class="divide-y divide-brand-border">
+                                    <!-- Dynamic product rows -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <!-- Manage Store Orders -->
+                    <div class="bg-white p-6 rounded-2xl border border-brand-border shadow-sm">
+                        <h3 class="font-bold text-lg heading-serif mb-4">Customer Orders Management</h3>
+                        <div class="overflow-x-auto">
+                            <table class="w-full text-left text-xs">
+                                <thead class="bg-brand-sand text-brand-dark font-bold uppercase border-b border-brand-border">
+                                    <tr>
+                                        <th class="p-3">Order ID</th>
+                                        <th class="p-3">Customer</th>
+                                        <th class="p-3">Amount</th>
+                                        <th class="p-3">Status</th>
+                                        <th class="p-3 text-right">Update Status</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="adminOrdersTable" class="divide-y divide-brand-border">
+                                    <!-- Dynamic order rows -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- FOOTER -->
+    <footer class="bg-brand-dark text-white pt-12 pb-8 border-t border-brand-gold/20 mt-16">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 grid grid-cols-1 md:grid-cols-4 gap-8">
+            <div class="space-y-3">
+                <div class="flex items-center space-x-2">
+                    <div class="w-7 h-7 border border-brand-gold rounded-full flex items-center justify-center bg-brand-charcoal">
+                        <i class="fa-solid fa-shirt text-brand-gold text-xs"></i>
+                    </div>
+                    <span class="text-lg font-bold tracking-widest heading-serif">BRANDED FITS</span>
+                </div>
+                <p class="text-xs text-gray-400">Trendy outfits for every mood. Premium quality Ghanaian fashion boutique providing nationwide delivery.</p>
+            </div>
+
+            <div>
+                <h4 class="font-bold text-sm text-brand-gold mb-3 uppercase tracking-wider">Quick Links</h4>
+                <ul class="space-y-2 text-xs text-gray-300">
+                    <li><button onclick="navigateTo('home')" class="hover:text-brand-gold">Home</button></li>
+                    <li><button onclick="navigateTo('shop')" class="hover:text-brand-gold">Shop All Outfits</button></li>
+                    <li><button onclick="navigateTo('orders')" class="hover:text-brand-gold">My Orders</button></li>
+                    <li><button onclick="navigateTo('admin')" class="hover:text-brand-gold">Owner Portal</button></li>
+                </ul>
+            </div>
+
+            <div>
+                <h4 class="font-bold text-sm text-brand-gold mb-3 uppercase tracking-wider">Accepted Payments</h4>
+                <div class="space-y-2 text-xs text-gray-300">
+                    <p><i class="fa-solid fa-mobile-screen text-brand-gold mr-2"></i>MTN Mobile Money (MoMo)</p>
+                    <p><i class="fa-solid fa-mobile-screen text-brand-gold mr-2"></i>Telecel Cash & AT Money</p>
+                    <p><i class="fa-solid fa-credit-card text-brand-gold mr-2"></i>Bank Transfers & Cards</p>
+                </div>
+            </div>
+
+            <div>
+                <h4 class="font-bold text-sm text-brand-gold mb-3 uppercase tracking-wider">Contact & Location</h4>
+                <p class="text-xs text-gray-300 leading-relaxed">
+                    Accra, Greater Accra Region, Ghana <br>
+                    Phone: +233 55 123 4567 <br>
+                    Email: orders@brandedfits.com
+                </p>
+            </div>
+        </div>
+
+        <div class="max-w-7xl mx-auto px-4 mt-8 pt-6 border-t border-gray-800 text-center text-xs text-gray-500">
+            &copy; 2026 BRANDED FITS Ghana. All Rights Reserved. Look Good · Feel Good · Repeat.
+        </div>
+    </footer>
+
+    <!-- JAVASCRIPT APPLICATION LOGIC -->
+    <script>
+        // INITIAL SAMPLE PRODUCT DATA MATCHING THE BRAND BOARD
+        const initialProducts = [
+            {
+                id: 'p1',
+                title: 'Elegant Midi Dress',
+                price: 180,
+                category: 'Dresses',
+                image: 'https://images.unsplash.com/photo-1595777457583-95e059d581b8?auto=format&fit=crop&q=80&w=600',
+                desc: 'This elegant midi dress is perfect for casual outings, date nights or special occasions. Made with high-quality fabric for ultimate comfort.'
+            },
+            {
+                id: 'p2',
+                title: 'Casual Co-ord Set',
+                price: 160,
+                category: 'Co-ords',
+                image: 'https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?auto=format&fit=crop&q=80&w=600',
+                desc: 'Chic two-piece co-ord set designed to keep you stylish and comfortable throughout the day.'
+            },
+            {
+                id: 'p3',
+                title: 'White Top & Pants',
+                price: 190,
+                category: 'Co-ords',
+                image: 'https://images.unsplash.com/photo-1509631179647-0177331693ae?auto=format&fit=crop&q=80&w=600',
+                desc: 'Crisp white two-piece ensemble offering a sharp, modern fashion silhouette.'
+            },
+            {
+                id: 'p4',
+                title: 'Bodycon Dress',
+                price: 170,
+                category: 'Dresses',
+                image: 'https://images.unsplash.com/photo-1566174053879-31528523f8ae?auto=format&fit=crop&q=80&w=600',
+                desc: 'Flattering bodycon dress tailored to enhance curves while ensuring total ease of movement.'
+            },
+            {
+                id: 'p5',
+                title: 'Classic Blazer Set',
+                price: 250,
+                category: 'Co-ords',
+                image: 'https://images.unsplash.com/photo-1548624313-0396c75e4b1a?auto=format&fit=crop&q=80&w=600',
+                desc: 'Sophisticated power blazer set suitable for business meetings or sleek evening wear.'
+            },
+            {
+                id: 'p6',
+                title: 'Sleek Jumpsuit',
+                price: 200,
+                category: 'Jumpsuits',
+                image: 'https://images.unsplash.com/photo-1539109136881-3be0616acf4b?auto=format&fit=crop&q=80&w=600',
+                desc: 'One-piece trendy jumpsuit featuring tailored waistline and breathable fabric.'
+            }
+        ];
+
+        // INITIAL DEMO ORDERS
+        const initialOrders = [
+            { id: '#BF123456', date: '12 May 2026', customer: 'Eulalia Anno-Agwei', amount: 360, status: 'Processing', delivery: 'Accra, Greater Accra' },
+            { id: '#BF123455', date: '8 May 2026', customer: 'Kofi Mensah', amount: 220, status: 'Shipped', delivery: 'Kumasi, Ashanti' },
+            { id: '#BF123454', date: '3 May 2026', customer: 'Ama Serwaa', amount: 160, status: 'Delivered', delivery: 'Tema, Greater Accra' }
+        ];
+
+        // APP STATE (PERFORM LOCALSTORAGE LOAD/SAVE)
+        let products = JSON.parse(localStorage.getItem('bf_products')) || initialProducts;
+        let orders = JSON.parse(localStorage.getItem('bf_orders')) || initialOrders;
+        let cart = JSON.parse(localStorage.getItem('bf_cart')) || [
+            { product: initialProducts[0], size: 'M', qty: 1 },
+            { product: initialProducts[1], size: 'M', qty: 1 }
+        ];
+        
+        let selectedProductForDetail = null;
+        let activeDetailSize = 'M';
+        let detailQuantity = 1;
+        let selectedSizeFilter = null;
+
+        // ON LOAD INITIALIZATION
+        window.addEventListener('DOMContentLoaded', () => {
+            renderFeaturedGrid();
+            renderShopGrid();
+            updateCartUI();
+            renderUserOrdersTable();
+            renderAdminTables();
+            updateAdminStats();
+        });
+
+        // SAVE STATE TO LOCALSTORAGE
+        function saveState() {
+            localStorage.setItem('bf_products', JSON.stringify(products));
+            localStorage.setItem('bf_orders', JSON.stringify(orders));
+            localStorage.setItem('bf_cart', JSON.stringify(cart));
+        }
+
+        // VIEW NAVIGATION CONTROLLER
+        function navigateTo(viewId) {
+            // Hide all sections
+            document.querySelectorAll('.view-section').forEach(sec => sec.classList.add('hidden'));
+            
+            // Show requested view
+            const target = document.getElementById(`view-${viewId}`);
+            if (target) {
+                target.classList.remove('hidden');
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            }
+
+            // Update Nav Active Styling
+            document.querySelectorAll('.nav-link').forEach(link => link.classList.remove('active-nav'));
+            const activeNavBtn = document.getElementById(`nav-${viewId}`);
+            if (activeNavBtn) activeNavBtn.classList.add('active-nav');
+        }
+
+        function toggleMobileMenu() {
+            const menu = document.getElementById('mobileMenu');
+            menu.classList.toggle('hidden');
+        }
+
+        // SHOW TOAST NOTIFICATION
+        function showToast(msg) {
+            const toast = document.getElementById('toast');
+            document.getElementById('toastMessage').innerText = msg;
+            toast.classList.remove('hidden');
+            setTimeout(() => {
+                toast.classList.add('hidden');
+            }, 3000);
+        }
+
+        // RENDER FEATURED GRID
+        function renderFeaturedGrid() {
+            const grid = document.getElementById('featuredGrid');
+            grid.innerHTML = products.slice(0, 4).map(p => `
+                <div class="bg-white rounded-2xl border border-brand-border overflow-hidden group shadow-sm hover:shadow-md transition-shadow">
+                    <div class="relative aspect-[3/4] bg-brand-sand overflow-hidden">
+                        <img src="${p.image}" alt="${p.title}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+                        <button onclick="showToast('Added to Wishlist!')" class="absolute top-3 right-3 w-8 h-8 bg-white/80 backdrop-blur-md rounded-full flex items-center justify-center text-brand-dark hover:text-red-500 transition-colors">
+                            <i class="fa-regular fa-heart text-xs"></i>
+                        </button>
+                    </div>
+                    <div class="p-4 space-y-2">
+                        <h4 class="font-bold text-sm text-brand-dark truncate">${p.title}</h4>
+                        <div class="flex justify-between items-center">
+                            <span class="font-bold text-brand-gold text-sm">GH₵ ${p.price}</span>
+                            <button onclick="openProductDetail('${p.id}')" class="text-xs bg-brand-sand hover:bg-brand-dark hover:text-white px-3 py-1.5 rounded-lg font-semibold transition-colors">
+                                View
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // RENDER SHOP GRID & FILTERING
+        function renderShopGrid(itemsToRender = products) {
+            const grid = document.getElementById('shopGrid');
+            if (itemsToRender.length === 0) {
+                grid.innerHTML = `
+                    <div class="col-span-full py-12 text-center text-brand-grayMuted">
+                        <i class="fa-solid fa-shirt text-4xl mb-2 text-brand-border"></i>
+                        <p>No outfits match your filter criteria.</p>
+                    </div>
+                `;
+                return;
+            }
+
+            grid.innerHTML = itemsToRender.map(p => `
+                <div class="bg-white rounded-2xl border border-brand-border overflow-hidden group shadow-sm hover:shadow-md transition-all flex flex-col justify-between">
+                    <div class="relative aspect-[3/4] bg-brand-sand overflow-hidden cursor-pointer" onclick="openProductDetail('${p.id}')">
+                        <img src="${p.image}" alt="${p.title}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+                    </div>
+                    <div class="p-4 space-y-2">
+                        <span class="text-[10px] uppercase font-bold text-brand-gold tracking-wider">${p.category}</span>
+                        <h4 class="font-bold text-sm text-brand-dark truncate cursor-pointer" onclick="openProductDetail('${p.id}')">${p.title}</h4>
+                        <div class="flex justify-between items-center pt-1">
+                            <span class="font-bold text-brand-dark text-sm">GH₵ ${p.price}</span>
+                            <button onclick="quickAddToCart('${p.id}')" class="bg-brand-dark hover:bg-brand-gold text-white w-8 h-8 rounded-lg flex items-center justify-center transition-colors">
+                                <i class="fa-solid fa-plus text-xs"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // FILTER CONTROL FUNCTIONS
+        function applyFilters() {
+            const selectedCat = document.querySelector('input[name="category"]:checked')?.value || 'all';
+            const maxPrice = parseFloat(document.getElementById('priceRange').value);
+            const sortBy = document.getElementById('sortSelect').value;
+
+            let filtered = products.filter(p => {
+                const matchCat = (selectedCat === 'all') || (p.category === selectedCat);
+                const matchPrice = p.price <= maxPrice;
+                return matchCat && matchPrice;
+            });
+
+            if (sortBy === 'price-low') {
+                filtered.sort((a,b) => a.price - b.price);
+            } else if (sortBy === 'price-high') {
+                filtered.sort((a,b) => b.price - a.price);
+            }
+
+            renderShopGrid(filtered);
+        }
+
+        function updatePriceFilter(val) {
+            document.getElementById('priceValue').innerText = `GH₵ ${val}`;
+            applyFilters();
+        }
+
+        function toggleSizeFilter(size, btn) {
+            document.querySelectorAll('.size-btn').forEach(b => b.classList.remove('border-brand-gold', 'bg-brand-gold/10'));
+            if (selectedSizeFilter === size) {
+                selectedSizeFilter = null;
+            } else {
+                selectedSizeFilter = size;
+                btn.classList.add('border-brand-gold', 'bg-brand-gold/10');
+            }
+            applyFilters();
+        }
+
+        function resetFilters() {
+            document.querySelector('input[value="all"]').checked = true;
+            document.getElementById('priceRange').value = 400;
+            document.getElementById('priceValue').innerText = 'GH₵ 400';
+            document.querySelectorAll('.size-btn').forEach(b => b.classList.remove('border-brand-gold', 'bg-brand-gold/10'));
+            selectedSizeFilter = null;
+            applyFilters();
+        }
+
+        function handleSearch(e) {
+            const query = e.target.value.toLowerCase().trim();
+            if(!query) {
+                renderShopGrid(products);
+                return;
+            }
+            navigateTo('shop');
+            const matches = products.filter(p => p.title.toLowerCase().includes(query) || p.category.toLowerCase().includes(query));
+            renderShopGrid(matches);
+        }
+
+        // PRODUCT DETAIL PAGE VIEW
+        function openProductDetail(productId) {
+            selectedProductForDetail = products.find(p => p.id === productId);
+            if (!selectedProductForDetail) return;
+
+            document.getElementById('detailImg').src = selectedProductForDetail.image;
+            document.getElementById('detailCategory').innerText = selectedProductForDetail.category;
+            document.getElementById('detailTitle').innerText = selectedProductForDetail.title;
+            document.getElementById('detailPrice').innerText = `GH₵ ${selectedProductForDetail.price}`;
+            document.getElementById('detailDesc').innerText = selectedProductForDetail.desc;
+            
+            detailQuantity = 1;
+            document.getElementById('detailQty').innerText = detailQuantity;
+
+            // Wire detail action buttons
+            document.getElementById('addToCartBtn').onclick = () => {
+                addToCart(selectedProductForDetail, activeDetailSize, detailQuantity);
+            };
+
+            document.getElementById('buyNowBtn').onclick = () => {
+                addToCart(selectedProductForDetail, activeDetailSize, detailQuantity);
+                navigateTo('checkout');
+            };
+
+            navigateTo('product');
+        }
+
+        function selectDetailSize(size, el) {
+            activeDetailSize = size;
+            document.querySelectorAll('.detail-size-btn').forEach(b => b.classList.remove('border-2', 'border-brand-gold', 'bg-brand-gold/10'));
+            el.classList.add('border-2', 'border-brand-gold', 'bg-brand-gold/10');
+        }
+
+        function adjustDetailQty(delta) {
+            detailQuantity = Math.max(1, detailQuantity + delta);
+            document.getElementById('detailQty').innerText = detailQuantity;
+        }
+
+        // CART LOGIC
+        function quickAddToCart(productId) {
+            const product = products.find(p => p.id === productId);
+            if (product) addToCart(product, 'M', 1);
+        }
+
+        function addToCart(product, size, qty) {
+            const existingIndex = cart.findIndex(item => item.product.id === product.id && item.size === size);
+            if (existingIndex > -1) {
+                cart[existingIndex].qty += qty;
+            } else {
+                cart.push({ product, size, qty });
+            }
+            saveState();
+            updateCartUI();
+            showToast(`${product.title} added to cart`);
+        }
+
+        function updateCartQty(index, delta) {
+            cart[index].qty += delta;
+            if (cart[index].qty <= 0) {
+                cart.splice(index, 1);
+            }
+            saveState();
+            updateCartUI();
+        }
+
+        function removeCartItem(index) {
+            cart.splice(index, 1);
+            saveState();
+            updateCartUI();
+        }
+
+        function updateCartUI() {
+            // Update cart count badge
+            const totalItems = cart.reduce((acc, item) => acc + item.qty, 0);
+            document.getElementById('cartCount').innerText = totalItems;
+
+            const cartList = document.getElementById('cartItemsList');
+            
+            if (cart.length === 0) {
+                cartList.innerHTML = `
+                    <div class="bg-white p-8 rounded-2xl border border-brand-border text-center text-brand-grayMuted space-y-3">
+                        <i class="fa-solid fa-bag-shopping text-4xl text-brand-border"></i>
+                        <p>Your shopping bag is empty.</p>
+                        <button onclick="navigateTo('shop')" class="bg-brand-dark text-white px-6 py-2 rounded-xl text-xs font-semibold">
+                            Explore Outfits
+                        </button>
+                    </div>
+                `;
+                document.getElementById('cartSubtotal').innerText = 'GH₵ 0';
+                document.getElementById('cartTotal').innerText = 'GH₵ 20';
+                return;
+            }
+
+            let subtotal = 0;
+            cartList.innerHTML = cart.map((item, idx) => {
+                const itemTotal = item.product.price * item.qty;
+                subtotal += itemTotal;
+                return `
+                    <div class="bg-white p-4 rounded-2xl border border-brand-border flex items-center space-x-4 shadow-sm">
+                        <img src="${item.product.image}" alt="${item.product.title}" class="w-20 h-24 object-cover rounded-xl bg-brand-sand">
+                        <div class="flex-grow space-y-1">
+                            <h4 class="font-bold text-sm text-brand-dark">${item.product.title}</h4>
+                            <p class="text-xs text-brand-grayMuted">Size: <span class="font-semibold text-brand-dark">${item.size}</span></p>
+                            <span class="font-bold text-brand-gold text-sm block">GH₵ ${item.product.price}</span>
+                        </div>
+                        <div class="flex items-center border border-brand-border rounded-lg bg-brand-sand">
+                            <button onclick="updateCartQty(${idx}, -1)" class="px-2 py-0.5 font-bold text-xs hover:bg-brand-gold/20">-</button>
+                            <span class="px-2 text-xs font-bold">${item.qty}</span>
+                            <button onclick="updateCartQty(${idx}, 1)" class="px-2 py-0.5 font-bold text-xs hover:bg-brand-gold/20">+</button>
+                        </div>
+                        <button onclick="removeCartItem(${idx})" class="text-gray-400 hover:text-red-500 p-2">
+                            <i class="fa-solid fa-trash-can text-sm"></i>
+                        </button>
+                    </div>
+                `;
+            }).join('');
+
+            const deliveryFee = 20;
+            const grandTotal = subtotal + deliveryFee;
+
+            document.getElementById('cartSubtotal').innerText = `GH₵ ${subtotal}`;
+            document.getElementById('cartDeliveryFee').innerText = `GH₵ ${deliveryFee}`;
+            document.getElementById('cartTotal').innerText = `GH₵ ${grandTotal}`;
+
+            // Sync checkout values
+            updateCheckoutUI(subtotal, deliveryFee, grandTotal);
+        }
+
+        function updateCheckoutUI(subtotal, deliveryFee, grandTotal) {
+            document.getElementById('coSubtotal').innerText = `GH₵ ${subtotal}`;
+            document.getElementById('coDelivery').innerText = `GH₵ ${deliveryFee}`;
+            document.getElementById('coTotal').innerText = `GH₵ ${grandTotal}`;
+
+            const summaryBox = document.getElementById('checkoutSummaryItems');
+            summaryBox.innerHTML = cart.map(i => `
+                <div class="flex justify-between py-1.5">
+                    <span>${i.product.title} (x${i.qty})</span>
+                    <span class="font-semibold">GH₵ ${i.product.price * i.qty}</span>
+                </div>
+            `).join('');
+        }
+
+        // PLACE ORDER HANDLER
+        function handlePlaceOrder(e) {
+            e.preventDefault();
+
+            if (cart.length === 0) {
+                showToast('Your cart is empty');
+                return;
+            }
+
+            const name = document.getElementById('custName').value;
+            const phone = document.getElementById('custPhone').value;
+            const address = document.getElementById('custAddress').value;
+            const city = document.getElementById('custCity').value;
+            const region = document.getElementById('custRegion').value;
+            const payMethod = document.querySelector('input[name="paymentMethod"]:checked').value;
+
+            const subtotal = cart.reduce((sum, item) => sum + (item.product.price * item.qty), 0);
+            const totalAmount = subtotal + 20;
+
+            const newOrderNo = `#BF${Math.floor(100000 + Math.random() * 900000)}`;
+
+            const newOrder = {
+                id: newOrderNo,
+                date: new Date().toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' }),
+                customer: name,
+                amount: totalAmount,
+                status: 'Processing',
+                delivery: `${address}, ${city}, ${region}`,
+                phone: phone,
+                paymentMethod: payMethod
+            };
+
+            orders.unshift(newOrder);
+            cart = []; // clear cart
+            saveState();
+
+            // Populate success screen
+            document.getElementById('succOrderNo').innerText = newOrderNo;
+            document.getElementById('succAmount').innerText = `GH₵ ${totalAmount}`;
+            document.getElementById('succPayment').innerText = payMethod;
+
+            updateCartUI();
+            renderUserOrdersTable();
+            renderAdminTables();
+            updateAdminStats();
+
+            navigateTo('success');
+        }
+
+        // MY ACCOUNT ORDERS TABLE
+        function renderUserOrdersTable() {
+            const tbody = document.getElementById('userOrdersTable');
+            if (orders.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="5" class="p-4 text-center text-brand-grayMuted">No order history available.</td></tr>`;
+                return;
+            }
+
+            tbody.innerHTML = orders.map(o => `
+                <tr class="hover:bg-brand-sand/30">
+                    <td class="p-4 font-bold font-mono text-brand-dark">${o.id}</td>
+                    <td class="p-4 text-brand-grayMuted text-xs">${o.date}</td>
+                    <td class="p-4 text-xs">${o.delivery}</td>
+                    <td class="p-4 font-bold text-brand-gold">GH₵ ${o.amount}</td>
+                    <td class="p-4">
+                        <span class="px-2.5 py-1 rounded-full text-[10px] font-bold ${getStatusStyle(o.status)}">
+                            ${o.status}
+                        </span>
+                    </td>
+                </tr>
+            `).join('');
+        }
+
+        function getStatusStyle(status) {
+            switch(status) {
+                case 'Processing': return 'bg-amber-100 text-amber-800';
+                case 'Shipped': return 'bg-blue-100 text-blue-800';
+                case 'Delivered': return 'bg-emerald-100 text-emerald-800';
+                case 'Cancelled': return 'bg-red-100 text-red-800';
+                default: return 'bg-gray-100 text-gray-800';
+            }
+        }
+
+        // OWNER ADMIN DASHBOARD LOGIC
+        function handleAddProduct(e) {
+            e.preventDefault();
+            const title = document.getElementById('newTitle').value;
+            const price = parseFloat(document.getElementById('newPrice').value);
+            const category = document.getElementById('newCategory').value;
+            const image = document.getElementById('newImg').value;
+            const desc = document.getElementById('newDesc').value || 'High-quality fashion outfit.';
+
+            const newProd = {
+                id: 'p' + Date.now(),
+                title,
+                price,
+                category,
+                image,
+                desc
+            };
+
+            products.unshift(newProd);
+            saveState();
+
+            // Refresh UI grids
+            renderFeaturedGrid();
+            renderShopGrid();
+            renderAdminTables();
+            updateAdminStats();
+
+            // Reset form
+            document.getElementById('addProductForm').reset();
+            showToast('New product added to store!');
+        }
+
+        function deleteProduct(id) {
+            products = products.filter(p => p.id !== id);
+            saveState();
+            renderFeaturedGrid();
+            renderShopGrid();
+            renderAdminTables();
+            updateAdminStats();
+            showToast('Product removed');
+        }
+
+        function updateOrderStatus(orderId, newStatus) {
+            const order = orders.find(o => o.id === orderId);
+            if (order) {
+                order.status = newStatus;
+                saveState();
+                renderUserOrdersTable();
+                renderAdminTables();
+                updateAdminStats();
+                showToast(`Order ${orderId} updated to ${newStatus}`);
+            }
+        }
+
+        function renderAdminTables() {
+            // Inventory Table
+            const prodTbody = document.getElementById('adminProductsTable');
+            prodTbody.innerHTML = products.map(p => `
+                <tr>
+                    <td class="p-3 flex items-center space-x-2">
+                        <img src="${p.image}" class="w-8 h-10 object-cover rounded">
+                        <span class="font-bold text-brand-dark">${p.title}</span>
+                    </td>
+                    <td class="p-3 text-brand-grayMuted">${p.category}</td>
+                    <td class="p-3 font-semibold text-brand-gold">GH₵ ${p.price}</td>
+                    <td class="p-3 text-right">
+                        <button onclick="deleteProduct('${p.id}')" class="text-red-500 hover:text-red-700 font-semibold text-xs">
+                            Remove
+                        </button>
+                    </td>
+                </tr>
+            `).join('');
+
+            // Admin Orders Table
+            const orderTbody = document.getElementById('adminOrdersTable');
+            orderTbody.innerHTML = orders.map(o => `
+                <tr>
+                    <td class="p-3 font-mono font-bold">${o.id}</td>
+                    <td class="p-3">${o.customer}</td>
+                    <td class="p-3 font-bold text-brand-gold">GH₵ ${o.amount}</td>
+                    <td class="p-3">
+                        <span class="px-2 py-0.5 rounded text-[10px] font-bold ${getStatusStyle(o.status)}">${o.status}</span>
+                    </td>
+                    <td class="p-3 text-right">
+                        <select onchange="updateOrderStatus('${o.id}', this.value)" class="border border-brand-border text-[11px] rounded p-1 bg-white">
+                            <option value="Processing" ${o.status==='Processing'?'selected':''}>Processing</option>
+                            <option value="Shipped" ${o.status==='Shipped'?'selected':''}>Shipped</option>
+                            <option value="Delivered" ${o.status==='Delivered'?'selected':''}>Delivered</option>
+                            <option value="Cancelled" ${o.status==='Cancelled'?'selected':''}>Cancelled</option>
+                        </select>
+                    </td>
+                </tr>
+            `).join('');
+        }
+
+        function updateAdminStats() {
+            document.getElementById('adminStatOrders').innerText = orders.length;
+            const totalRev = orders.reduce((sum, o) => sum + o.amount, 0);
+            document.getElementById('adminStatRevenue').innerText = `GH₵ ${totalRev.toLocaleString()}`;
+            const pending = orders.filter(o => o.status === 'Processing').length;
+            document.getElementById('adminStatPending').innerText = pending;
+            document.getElementById('adminStatProducts').innerText = products.length;
+        }
+
+        <!-- Scroll down near the bottom of index.html -->
+
+
+  // 1. API Base URL
+  const API_BASE_URL = (window.location.hostname === '127.0.0.1' || window.location.hostname === 'localhost')
+    ? 'http://127.0.0.1:5000'
+    : 'https://branded-fits-backend.onrender.com';
+
+  // 2. Your existing product upload function
+  async function handleAddProduct(event) {
+    // ... your existing Cloudinary & upload code ...
+  }
+
+  // 3. PASTE YOUR processMoMoPayment FUNCTION RIGHT HERE:
+  function processMoMoPayment(orderData) {
+    const handler = PaystackPop.setup({
+      key: 'pk_test_YOUR_PAYSTACK_PUBLIC_KEY', // Remember to replace this with your actual key
+      email: orderData.email || 'customer@email.com',
+      amount: Math.round(orderData.totalPrice * 100), // Converted to pesewas
+      currency: 'GHS',
+      ref: 'BF_' + Math.floor((Math.random() * 1000000000) + 1),
+      metadata: {
+        custom_fields: [
+          { display_name: "Customer Name", variable_name: "customer_name", value: orderData.fullName },
+          { display_name: "Phone Number", variable_name: "phone_number", value: orderData.phone },
+          { display_name: "Delivery Address", variable_name: "address", value: orderData.address },
+          { display_name: "Region", variable_name: "region", value: orderData.region }
+        ]
+      },
+      callback: function(response) {
+        // Sends order details to Flask backend after MoMo succeeds
+        fetch(`${API_BASE_URL}/api/orders`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            ...orderData,
+            paymentReference: response.reference,
+            paymentStatus: 'Paid'
+          })
+        })
+        .then(res => res.json())
+        .then(data => {
+          alert('Payment Successful! Order Reference: ' + response.reference);
+          window.location.reload();
+        });
+      },
+      onClose: function() {
+        alert('Transaction cancelled.');
+      }
+    });
+
+    handler.openIframe();
+  }
+
+    </script>
+
+    
+
+</body>
+</html>                                                                  
