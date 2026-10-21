@@ -1,5 +1,5 @@
 import sqlite3
-from flask import Flask, request, jsonify
+from flask import Flask, request, jsonify, render_template
 from flask_cors import CORS
 
 app = Flask(__name__)
@@ -69,20 +69,11 @@ def remove_product(prod_id):
     conn.commit()
     conn.close()
     return jsonify({"message": "Product removed"})
-from flask import Flask, render_template, jsonify, request
-
-app = Flask(__name__)
 
 # Render the frontend HTML page
 @app.route('/')
 def home():
     return render_template('index.html')
-
-# Sample API Endpoints (to replace localStorage later)
-@app.route('/api/products', methods=['GET'])
-def get_products():
-    # Fetch from database (SQLite / PostgreSQL)
-    return jsonify([])
 
 @app.route('/api/orders', methods=['POST'])
 def create_order():
