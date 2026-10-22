@@ -24,51 +24,58 @@
 async function handleAddProduct(event) {
   event.preventDefault();
 
-  const fileInput = document.getElementById('productImageInput');
-  const file = fileInput.files[0];
+  try {
+    const file = document.getElementById('productImageInput').files[0];
+    if (!file) {
+      throw new Error('Choose a product image first.');
+    }
 
-  // 1. Upload photo to Cloudinary
-  const formData = new FormData();
-  formData.append('file', file);
-  formData.append('upload_preset', 'branded');
+    const formData = new FormData();
+    formData.append('file', file);
+    formData.append('upload_preset', 'branded');
 
-  const cloudResponse = await fetch('https://api.cloudinary.com/v1_1/upzfj7fw/image/upload', {
-    method: 'POST',
-    body: formData
-  });
-  const cloudData = await cloudResponse.json();
-  const imageUrl = cloudData.secure_url; // Direct URL to the hosted image
+    const cloudResponse = await fetch('https://api.cloudinary.com/v1_1/upzfj7fw/image/upload', {
+      method: 'POST',
+      body: formData
+    });
+    const cloudData = await cloudResponse.json();
+    if (!cloudResponse.ok || !cloudData.secure_url) {
+      throw new Error(cloudData.error?.message || 'The product image could not be uploaded.');
+    }
 
-  // 2. Save product details + image URL to Flask Backend
-  const productPayload = {
-    name: document.getElementById('productName').value,
-    price: document.getElementById('productPrice').value,
-    category: document.getElementById('productCategory').value,
-    image: imageUrl
-  };
+    const productPayload = {
+      name: document.getElementById('productName').value.trim(),
+      price: document.getElementById('productPrice').value,
+      category: document.getElementById('productCategory').value,
+      image: cloudData.secure_url
+    };
+    const response = await fetch('/api/products', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(productPayload)
+    });
+    const result = await response.json();
+    if (!response.ok) {
+      throw new Error(result.error || 'The product could not be saved.');
+    }
 
-  await fetch('http://127.0.0.1:5000', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify(productPayload)
-  });
-
-  alert('Product uploaded successfully!');
-  loadProducts(); // Refresh catalog view
+    products.push({
+      id: String(result.id),
+      title: productPayload.name,
+      price: Number(productPayload.price),
+      category: productPayload.category,
+      image: productPayload.image,
+      desc: ''
+    });
+    saveState();
+    renderFeaturedGrid();
+    renderShopGrid();
+    renderAdminTables();
+    updateAdminStats();
+    event.target.reset();
+    showToast('Product uploaded successfully!');
+  } catch (error) {
+    console.error('Unable to add product:', error);
+    showToast(error.message || 'Unable to add product. Please try again.');
+  }
 }
-
-// Example form submit handler
-document.getElementById('checkoutForm')?.addEventListener('submit', function(e) {
-  e.preventDefault();
-
-  const orderData = {
-    fullName: document.getElementById('checkoutName').value,
-    email: document.getElementById('checkoutEmail').value,
-    phone: document.getElementById('checkoutPhone').value,
-    address: document.getElementById('checkoutAddress').value,
-    region: document.getElementById('checkoutRegion').value,
-    totalPrice: 180 // Total order cost in GHC
-  };
-
-  processMoMoPayment(orderData);
-});

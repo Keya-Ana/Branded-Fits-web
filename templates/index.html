@@ -442,6 +442,10 @@
                                 <input type="text" id="custName" required placeholder="e.g. Ama Mensah" class="w-full border border-brand-border rounded-xl p-2.5 text-sm focus:outline-none focus:border-brand-gold">
                             </div>
                             <div>
+                                <label class="block text-xs font-semibold text-brand-grayMuted mb-1">Email Address *</label>
+                                <input type="email" id="custEmail" required placeholder="you@example.com" class="w-full border border-brand-border rounded-xl p-2.5 text-sm focus:outline-none focus:border-brand-gold">
+                            </div>
+                            <div>
                                 <label class="block text-xs font-semibold text-brand-grayMuted mb-1">Phone Number (MoMo Enabled) *</label>
                                 <input type="tel" id="custPhone" required placeholder="024 XXX XXXX" class="w-full border border-brand-border rounded-xl p-2.5 text-sm focus:outline-none focus:border-brand-gold">
                             </div>
@@ -470,31 +474,12 @@
                     <!-- Payment Method Selection -->
                     <div class="bg-white p-6 rounded-2xl border border-brand-border shadow-sm space-y-4">
                         <h3 class="font-bold text-lg heading-serif text-brand-dark border-b border-brand-border pb-2">2. Payment Method</h3>
-                        
-                        <div class="space-y-3">
-                            <!-- Mobile Money Option -->
-                            <label class="flex items-center justify-between p-4 border border-brand-gold rounded-xl bg-brand-sand/30 cursor-pointer">
-                                <div class="flex items-center space-x-3">
-                                    <input type="radio" name="paymentMethod" value="MoMo" checked class="accent-brand-gold">
-                                    <div>
-                                        <p class="font-bold text-sm text-brand-dark">Ghana Mobile Money (MoMo)</p>
-                                        <p class="text-xs text-brand-grayMuted">MTN Mobile Money, Telecel Cash, AT Money</p>
-                                    </div>
-                                </div>
-                                <span class="text-xs bg-amber-100 text-amber-800 font-bold px-2 py-1 rounded">Instant Prompt</span>
-                            </label>
-
-                            <!-- Bank Transfer Option -->
-                            <label class="flex items-center justify-between p-4 border border-brand-border rounded-xl cursor-pointer hover:border-brand-gold">
-                                <div class="flex items-center space-x-3">
-                                    <input type="radio" name="paymentMethod" value="Bank Transfer / Card" class="accent-brand-gold">
-                                    <div>
-                                        <p class="font-bold text-sm text-brand-dark">Bank Transfer / Debit Card</p>
-                                        <p class="text-xs text-brand-grayMuted">Visa, Mastercard, GCB, Ecobank</p>
-                                    </div>
-                                </div>
-                                <i class="fa-regular fa-credit-card text-brand-grayMuted"></i>
-                            </label>
+                        <div class="flex items-center space-x-3 p-4 border border-brand-gold rounded-xl bg-brand-sand/30">
+                            <i class="fa-solid fa-lock text-brand-gold"></i>
+                            <div>
+                                <p class="font-bold text-sm text-brand-dark">Secure checkout with Paystack</p>
+                                <p class="text-xs text-brand-grayMuted">Pay with Ghana Mobile Money, card or other available methods.</p>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -522,8 +507,8 @@
                         </div>
                     </div>
 
-                    <button type="submit" class="w-full bg-brand-gold hover:bg-brand-dark text-white font-bold py-3.5 rounded-xl transition-colors shadow-lg">
-                        Place Order Now
+                    <button id="placeOrderButton" type="submit" class="w-full bg-brand-gold hover:bg-brand-dark text-white font-bold py-3.5 rounded-xl transition-colors shadow-lg">
+                        Continue to Paystack
                     </button>
                 </div>
             </form>
@@ -767,6 +752,8 @@
     <!-- JAVASCRIPT APPLICATION LOGIC -->
     <script>
         // INITIAL SAMPLE PRODUCT DATA MATCHING THE BRAND BOARD
+        const PAYSTACK_PUBLIC_KEY = {{ paystack_public_key|tojson }};
+
         const initialProducts = [
             {
                 id: 'p1',
@@ -846,6 +833,7 @@
             renderUserOrdersTable();
             renderAdminTables();
             updateAdminStats();
+            completePaystackReturn();
         });
 
         // SAVE STATE TO LOCALSTORAGE
@@ -1144,7 +1132,7 @@
         }
 
         // PLACE ORDER HANDLER
-        function handlePlaceOrder(e) {
+        async function handlePlaceOrder(e) {
             e.preventDefault();
 
             if (cart.length === 0) {
@@ -1152,43 +1140,136 @@
                 return;
             }
 
-            const name = document.getElementById('custName').value;
-            const phone = document.getElementById('custPhone').value;
-            const address = document.getElementById('custAddress').value;
-            const city = document.getElementById('custCity').value;
-            const region = document.getElementById('custRegion').value;
-            const payMethod = document.querySelector('input[name="paymentMethod"]:checked').value;
+            const button = document.getElementById('placeOrderButton');
+            if (!PAYSTACK_PUBLIC_KEY || typeof PaystackPop === 'undefined') {
+                showToast('Paystack checkout is not configured. Please contact the store.');
+                return;
+            }
+            button.disabled = true;
+            button.innerText = 'Connecting to Paystack...';
 
-            const subtotal = cart.reduce((sum, item) => sum + (item.product.price * item.qty), 0);
-            const totalAmount = subtotal + 20;
+            try {
+                const response = await fetch('/api/payments/initialize', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        customer: {
+                            name: document.getElementById('custName').value.trim(),
+                            email: document.getElementById('custEmail').value.trim(),
+                            phone: document.getElementById('custPhone').value.trim(),
+                            address: document.getElementById('custAddress').value.trim(),
+                            city: document.getElementById('custCity').value.trim(),
+                            region: document.getElementById('custRegion').value
+                        },
+                        items: cart.map(item => ({
+                            productId: item.product.id,
+                            size: item.size,
+                            quantity: item.qty
+                        }))
+                    })
+                });
+                const result = await response.json();
+                if (!response.ok) {
+                    throw new Error(result.error || 'Unable to start Paystack checkout.');
+                }
 
-            const newOrderNo = `#BF${Math.floor(100000 + Math.random() * 900000)}`;
+                let paymentVerificationInProgress = false;
+                const handler = PaystackPop.setup({
+                    key: PAYSTACK_PUBLIC_KEY,
+                    email: result.email,
+                    amount: result.amount,
+                    currency: 'GHS',
+                    ref: result.reference,
+                    metadata: {
+                        customer_name: result.metadata.customer_name,
+                        phone: result.metadata.phone,
+                        order_id: result.orderId
+                    },
+                    callback: function(payment) {
+                        paymentVerificationInProgress = true;
+                        button.innerText = 'Verifying payment...';
+                        (async function() {
+                            try {
+                                const verifiedOrder = await verifyPaystackReference(payment.reference);
+                                await completeVerifiedOrder(verifiedOrder);
+                            } catch (error) {
+                                console.error('Unable to verify Paystack payment:', error);
+                                showToast(error.message || 'Payment could not be confirmed. Please contact the store.');
+                                paymentVerificationInProgress = false;
+                                button.disabled = false;
+                                button.innerText = 'Continue to Paystack';
+                            }
+                        })();
+                    },
+                    onClose: function() {
+                        if (paymentVerificationInProgress) return;
+                        button.disabled = false;
+                        button.innerText = 'Continue to Paystack';
+                    }
+                });
+                handler.openIframe();
+            } catch (error) {
+                console.error('Unable to initialize Paystack checkout:', error);
+                showToast(error.message || 'Unable to start payment. Please try again.');
+                button.disabled = false;
+                button.innerText = 'Continue to Paystack';
+            }
+        }
 
-            const newOrder = {
-                id: newOrderNo,
-                date: new Date().toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' }),
-                customer: name,
-                amount: totalAmount,
-                status: 'Processing',
-                delivery: `${address}, ${city}, ${region}`,
-                phone: phone,
-                paymentMethod: payMethod
-            };
+        async function completePaystackReturn() {
+            const params = new URLSearchParams(window.location.search);
+            const reference = params.get('reference') || params.get('trxref');
+            if (!reference) return;
 
-            orders.unshift(newOrder);
-            cart = []; // clear cart
+            window.history.replaceState({}, document.title, window.location.pathname);
+            try {
+                const result = await verifyPaystackReference(reference);
+                await completeVerifiedOrder(result);
+            } catch (error) {
+                console.error('Unable to verify Paystack payment:', error);
+                showToast(error.message || 'Payment could not be confirmed. Please contact the store.');
+                navigateTo('checkout');
+            }
+        }
+
+        async function verifyPaystackReference(reference) {
+            const response = await fetch('/api/payments/verify', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ reference })
+            });
+            const result = await response.json();
+            if (!response.ok) {
+                throw new Error(result.error || 'Payment could not be verified.');
+            }
+            return result;
+        }
+
+        async function completeVerifiedOrder(result) {
+            if (!orders.some(order => order.id === result.orderId)) {
+                orders.unshift({
+                    id: result.orderId,
+                    date: new Date().toLocaleDateString('en-GB', {
+                        day: 'numeric',
+                        month: 'short',
+                        year: 'numeric'
+                    }),
+                    customer: result.customer,
+                    amount: Number(result.amount),
+                    status: 'Processing',
+                    delivery: result.delivery,
+                    paymentMethod: result.paymentMethod
+                });
+            }
+            cart = [];
             saveState();
-
-            // Populate success screen
-            document.getElementById('succOrderNo').innerText = newOrderNo;
-            document.getElementById('succAmount').innerText = `GH₵ ${totalAmount}`;
-            document.getElementById('succPayment').innerText = payMethod;
-
+            document.getElementById('succOrderNo').innerText = result.orderId;
+            document.getElementById('succAmount').innerText = `GH₵ ${result.amount}`;
+            document.getElementById('succPayment').innerText = result.paymentMethod;
             updateCartUI();
             renderUserOrdersTable();
             renderAdminTables();
             updateAdminStats();
-
             navigateTo('success');
         }
 
@@ -1331,57 +1412,6 @@
 
         <!-- Scroll down near the bottom of index.html -->
 
-
-  // 1. API Base URL
-  const API_BASE_URL = (window.location.hostname === '127.0.0.1' || window.location.hostname === 'localhost')
-    ? 'http://127.0.0.1:5000'
-    : 'https://branded-fits-backend.onrender.com';
-
-  // 2. Your existing product upload function
-  async function handleAddProduct(event) {
-    // ... your existing Cloudinary & upload code ...
-  }
-
-  // 3. PASTE YOUR processMoMoPayment FUNCTION RIGHT HERE:
-  function processMoMoPayment(orderData) {
-    const handler = PaystackPop.setup({
-      key: 'pk_test_YOUR_PAYSTACK_PUBLIC_KEY', // Remember to replace this with your actual key
-      email: orderData.email || 'customer@email.com',
-      amount: Math.round(orderData.totalPrice * 100), // Converted to pesewas
-      currency: 'GHS',
-      ref: 'BF_' + Math.floor((Math.random() * 1000000000) + 1),
-      metadata: {
-        custom_fields: [
-          { display_name: "Customer Name", variable_name: "customer_name", value: orderData.fullName },
-          { display_name: "Phone Number", variable_name: "phone_number", value: orderData.phone },
-          { display_name: "Delivery Address", variable_name: "address", value: orderData.address },
-          { display_name: "Region", variable_name: "region", value: orderData.region }
-        ]
-      },
-      callback: function(response) {
-        // Sends order details to Flask backend after MoMo succeeds
-        fetch(`${API_BASE_URL}/api/orders`, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            ...orderData,
-            paymentReference: response.reference,
-            paymentStatus: 'Paid'
-          })
-        })
-        .then(res => res.json())
-        .then(data => {
-          alert('Payment Successful! Order Reference: ' + response.reference);
-          window.location.reload();
-        });
-      },
-      onClose: function() {
-        alert('Transaction cancelled.');
-      }
-    });
-
-    handler.openIframe();
-  }
 
     </script>
 
