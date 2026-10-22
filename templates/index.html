@@ -67,9 +67,9 @@
                     </div>
 
                     <!-- Wishlist -->
-                    <button onclick="showToast('Wishlist saved!')" class="relative p-1 text-brand-dark hover:text-brand-gold transition-colors">
+                    <button onclick="navigateTo('wishlist')" aria-label="Open wishlist" class="relative p-1 text-brand-dark hover:text-brand-gold transition-colors">
                         <i class="fa-regular fa-heart text-xl"></i>
-                        <span id="wishlistCount" class="absolute -top-1 -right-1 bg-brand-gold text-white text-[10px] w-4 h-4 rounded-full flex items-center justify-center font-bold">3</span>
+                        <span id="wishlistCount" class="hidden absolute -top-1 -right-1 bg-brand-gold text-white text-[10px] w-4 h-4 rounded-full flex items-center justify-center font-bold">0</span>
                     </button>
 
                     <!-- Cart Drawer Trigger -->
@@ -88,6 +88,7 @@
             </div>
             <button onclick="navigateTo('home'); toggleMobileMenu()" class="block w-full text-left py-2 px-3 rounded hover:bg-brand-sand font-medium">Home</button>
             <button onclick="navigateTo('shop'); toggleMobileMenu()" class="block w-full text-left py-2 px-3 rounded hover:bg-brand-sand font-medium">Shop All Outfits</button>
+            <button onclick="navigateTo('wishlist'); toggleMobileMenu()" class="block w-full text-left py-2 px-3 rounded hover:bg-brand-sand font-medium">Wishlist</button>
             <button onclick="navigateTo('orders'); toggleMobileMenu()" class="block w-full text-left py-2 px-3 rounded hover:bg-brand-sand font-medium">My Orders</button>
             <button onclick="navigateTo('admin'); toggleMobileMenu()" class="block w-full text-left py-2 px-3 rounded hover:bg-brand-sand text-brand-gold font-semibold">Owner Dashboard</button>
         </div>
@@ -107,7 +108,7 @@
         <!-- ========================================== -->
         <section id="view-home" class="view-section">
             <!-- Hero Banner -->
-            <div class="relative bg-brand-sand py-16 md:py-24 px-4 sm:px-6 lg:px-8 overflow-hidden">
+            <div class="relative hero-banner py-16 md:py-24 px-4 sm:px-6 lg:px-8 overflow-hidden">
                 <div class="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
                     <div class="z-10 space-y-6 text-center md:text-left">
                         <span class="inline-block bg-brand-gold/20 text-brand-dark text-xs uppercase tracking-widest font-bold px-3 py-1 rounded-full border border-brand-gold/40">New Season Collection 2026</span>
@@ -223,20 +224,20 @@
                                 <span>All Categories</span>
                             </label>
                             <label class="flex items-center space-x-2 cursor-pointer hover:text-brand-dark">
-                                <input type="radio" name="category" value="Dresses" onchange="applyFilters()" class="accent-brand-gold">
-                                <span>Dresses</span>
+                                <input type="radio" name="category" value="Office Trousers" onchange="applyFilters()" class="accent-brand-gold">
+                                <span>Office Trousers</span>
                             </label>
                             <label class="flex items-center space-x-2 cursor-pointer hover:text-brand-dark">
-                                <input type="radio" name="category" value="Tops" onchange="applyFilters()" class="accent-brand-gold">
-                                <span>Tops</span>
+                                <input type="radio" name="category" value="Jeans" onchange="applyFilters()" class="accent-brand-gold">
+                                <span>Jeans</span>
                             </label>
                             <label class="flex items-center space-x-2 cursor-pointer hover:text-brand-dark">
-                                <input type="radio" name="category" value="Co-ords" onchange="applyFilters()" class="accent-brand-gold">
-                                <span>Co-ords & Sets</span>
+                                <input type="radio" name="category" value="Caps" onchange="applyFilters()" class="accent-brand-gold">
+                                <span>Caps</span>
                             </label>
                             <label class="flex items-center space-x-2 cursor-pointer hover:text-brand-dark">
-                                <input type="radio" name="category" value="Jumpsuits" onchange="applyFilters()" class="accent-brand-gold">
-                                <span>Jumpsuits</span>
+                                <input type="radio" name="category" value="Shirts" onchange="applyFilters()" class="accent-brand-gold">
+                                <span>Shirts</span>
                             </label>
                         </div>
                     </div>
@@ -279,7 +280,24 @@
         </section>
 
         <!-- ========================================== -->
-        <!-- 3. PRODUCT DETAIL PAGE VIEW                -->
+        <!-- 3. WISHLIST VIEW                           -->
+        <!-- ========================================== -->
+        <section id="view-wishlist" class="view-section hidden py-8 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="mb-6 flex justify-between items-center pb-4 border-b border-brand-border">
+                <div>
+                    <h1 class="text-2xl md:text-3xl font-bold heading-serif text-brand-dark">Your Wishlist</h1>
+                    <p class="text-xs text-brand-grayMuted">The outfits you love, all in one place</p>
+                </div>
+                <button onclick="navigateTo('shop')" class="text-sm font-semibold text-brand-dark hover:text-brand-gold flex items-center space-x-2">
+                    <i class="fa-solid fa-arrow-left text-xs"></i>
+                    <span>Continue Shopping</span>
+                </button>
+            </div>
+            <div id="wishlistGrid" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4 md:gap-6"></div>
+        </section>
+
+        <!-- ========================================== -->
+        <!-- 4. PRODUCT DETAIL PAGE VIEW                -->
         <!-- ========================================== -->
         <section id="view-product" class="view-section hidden py-10 max-w-6xl mx-auto px-4">
             <button onclick="navigateTo('shop')" class="mb-6 inline-flex items-center space-x-2 text-xs font-bold uppercase tracking-wider text-brand-grayMuted hover:text-brand-dark">
@@ -382,7 +400,7 @@
         </section>
 
         <!-- ========================================== -->
-        <!-- 4. CART PAGE VIEW                          -->
+        <!-- 5. CART PAGE VIEW                          -->
         <!-- ========================================== -->
         <section id="view-cart" class="view-section hidden py-10 max-w-5xl mx-auto px-4">
             <h1 class="text-3xl font-bold heading-serif text-brand-dark mb-6">Your Shopping Bag</h1>
@@ -425,7 +443,7 @@
         </section>
 
         <!-- ========================================== -->
-        <!-- 5. CHECKOUT & PAYMENT PAGE VIEW           -->
+        <!-- 6. CHECKOUT & PAYMENT PAGE VIEW           -->
         <!-- ========================================== -->
         <section id="view-checkout" class="view-section hidden py-10 max-w-5xl mx-auto px-4">
             <h1 class="text-3xl font-bold heading-serif text-brand-dark mb-6">Checkout</h1>
@@ -530,7 +548,7 @@
         </section>
 
         <!-- ========================================== -->
-        <!-- 6. ORDER SUCCESS / CONFIRMATION VIEW       -->
+        <!-- 7. ORDER SUCCESS / CONFIRMATION VIEW       -->
         <!-- ========================================== -->
         <section id="view-success" class="view-section hidden py-16 max-w-xl mx-auto px-4 text-center">
             <div class="bg-white p-8 rounded-3xl border border-brand-border shadow-md space-y-6">
@@ -574,7 +592,7 @@
         </section>
 
         <!-- ========================================== -->
-        <!-- 7. MY ACCOUNT / ORDERS VIEW                -->
+        <!-- 8. MY ACCOUNT / ORDERS VIEW                -->
         <!-- ========================================== -->
         <section id="view-orders" class="view-section hidden py-10 max-w-5xl mx-auto px-4">
             <h1 class="text-3xl font-bold heading-serif text-brand-dark mb-6">My Orders & Purchases</h1>
@@ -600,7 +618,7 @@
         </section>
 
         <!-- ========================================== -->
-        <!-- 8. ADMIN DASHBOARD (OWNER ONLY VIEW)       -->
+        <!-- 9. ADMIN DASHBOARD (OWNER ONLY VIEW)       -->
         <!-- ========================================== -->
         <section id="view-admin" class="view-section hidden py-8 max-w-7xl mx-auto px-4">
             <div class="flex justify-between items-center mb-8 border-b border-brand-border pb-4">
@@ -608,27 +626,27 @@
                     <h1 class="text-3xl font-bold heading-serif text-brand-dark">Owner Dashboard</h1>
                     <p class="text-xs text-brand-grayMuted">Private store management & live inventory control</p>
                 </div>
-                <span class="bg-brand-dark text-brand-gold text-xs font-mono font-bold px-3 py-1.5 rounded-full">Owner Mode Active</span>
+                <span class="bg-brand-sand text-brand-dark border border-brand-gold/40 text-xs font-mono font-bold px-3 py-1.5 rounded-full">Owner Mode Active</span>
             </div>
 
             <!-- Stats Overview -->
             <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
-                <div class="bg-white p-5 rounded-2xl border border-brand-border shadow-sm">
+                <button type="button" onclick="openAdminMetric('orders')" class="bg-white p-5 rounded-2xl border border-brand-border shadow-sm text-left hover:border-brand-gold hover:shadow-md focus:outline-none focus:ring-2 focus:ring-brand-gold transition-all">
                     <span class="text-xs font-bold text-brand-grayMuted uppercase">Total Orders</span>
-                    <p id="adminStatOrders" class="text-3xl font-bold text-brand-dark mt-1">0</p>
-                </div>
-                <div class="bg-white p-5 rounded-2xl border border-brand-border shadow-sm">
+                    <span id="adminStatOrders" class="block text-3xl font-bold text-brand-dark mt-1">0</span>
+                </button>
+                <button type="button" onclick="openAdminMetric('revenue')" class="bg-white p-5 rounded-2xl border border-brand-border shadow-sm text-left hover:border-brand-gold hover:shadow-md focus:outline-none focus:ring-2 focus:ring-brand-gold transition-all">
                     <span class="text-xs font-bold text-brand-grayMuted uppercase">Total Revenue</span>
-                    <p id="adminStatRevenue" class="text-3xl font-bold text-brand-gold mt-1">GH₵ 0</p>
-                </div>
-                <div class="bg-white p-5 rounded-2xl border border-brand-border shadow-sm">
+                    <span id="adminStatRevenue" class="block text-3xl font-bold text-brand-gold mt-1">GH₵ 0</span>
+                </button>
+                <button type="button" onclick="openAdminMetric('pending')" class="bg-white p-5 rounded-2xl border border-brand-border shadow-sm text-left hover:border-brand-gold hover:shadow-md focus:outline-none focus:ring-2 focus:ring-brand-gold transition-all">
                     <span class="text-xs font-bold text-brand-grayMuted uppercase">Pending Orders</span>
-                    <p id="adminStatPending" class="text-3xl font-bold text-amber-600 mt-1">0</p>
-                </div>
-                <div class="bg-white p-5 rounded-2xl border border-brand-border shadow-sm">
+                    <span id="adminStatPending" class="block text-3xl font-bold text-amber-600 mt-1">0</span>
+                </button>
+                <button type="button" onclick="openAdminMetric('products')" class="bg-white p-5 rounded-2xl border border-brand-border shadow-sm text-left hover:border-brand-gold hover:shadow-md focus:outline-none focus:ring-2 focus:ring-brand-gold transition-all">
                     <span class="text-xs font-bold text-brand-grayMuted uppercase">Active Products</span>
-                    <p id="adminStatProducts" class="text-3xl font-bold text-brand-dark mt-1">0</p>
-                </div>
+                    <span id="adminStatProducts" class="block text-3xl font-bold text-brand-dark mt-1">0</span>
+                </button>
             </div>
 
             <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
@@ -648,16 +666,18 @@
                             <div>
                                 <label class="block text-xs font-semibold text-brand-grayMuted mb-1">Category</label>
                                 <select id="newCategory" class="w-full border border-brand-border rounded-lg p-2 text-xs bg-white">
-                                    <option value="Dresses">Dresses</option>
-                                    <option value="Tops">Tops</option>
-                                    <option value="Co-ords">Co-ords</option>
-                                    <option value="Jumpsuits">Jumpsuits</option>
+                                    <option value="Office Trousers">Office Trousers</option>
+                                    <option value="Jeans">Jeans</option>
+                                    <option value="Caps">Caps</option>
+                                    <option value="Shirts">Shirts</option>
                                 </select>
                             </div>
                         </div>
                         <div>
-                            <label class="block text-xs font-semibold text-brand-grayMuted mb-1">Image URL</label>
-                            <input type="url" id="newImg" required placeholder="https://images.unsplash.com/..." class="w-full border border-brand-border rounded-lg p-2 text-xs">
+                            <label class="block text-xs font-semibold text-brand-grayMuted mb-1">Product Image</label>
+                            <input type="file" id="newImageFile" accept="image/*" class="w-full border border-brand-border rounded-lg p-2 text-xs">
+                            <p class="text-[11px] text-brand-grayMuted mt-1">Choose an image to upload to Cloudinary, or paste an image URL below.</p>
+                            <input type="url" id="newImg" placeholder="https://..." class="w-full border border-brand-border rounded-lg p-2 text-xs mt-2">
                         </div>
                         <div>
                             <label class="block text-xs font-semibold text-brand-grayMuted mb-1">Description</label>
@@ -672,7 +692,7 @@
                 <!-- Admin Orders and Inventory -->
                 <div class="lg:col-span-2 space-y-8">
                     <!-- Manage Inventory -->
-                    <div class="bg-white p-6 rounded-2xl border border-brand-border shadow-sm">
+                    <div id="adminInventorySection" class="bg-white p-6 rounded-2xl border border-brand-border shadow-sm">
                         <h3 class="font-bold text-lg heading-serif mb-4">Store Inventory</h3>
                         <div class="overflow-x-auto">
                             <table class="w-full text-left text-xs">
@@ -692,8 +712,11 @@
                     </div>
 
                     <!-- Manage Store Orders -->
-                    <div class="bg-white p-6 rounded-2xl border border-brand-border shadow-sm">
-                        <h3 class="font-bold text-lg heading-serif mb-4">Customer Orders Management</h3>
+                    <div id="adminOrdersSection" class="bg-white p-6 rounded-2xl border border-brand-border shadow-sm">
+                        <div class="flex items-center justify-between gap-3 mb-4">
+                            <h3 class="font-bold text-lg heading-serif">Customer Orders Management</h3>
+                            <button id="adminOrderFilterReset" type="button" onclick="setAdminOrderFilter('all')" class="hidden text-xs font-semibold text-brand-gold hover:underline">Show all orders</button>
+                        </div>
                         <div class="overflow-x-auto">
                             <table class="w-full text-left text-xs">
                                 <thead class="bg-brand-sand text-brand-dark font-bold uppercase border-b border-brand-border">
@@ -832,16 +855,19 @@
             { product: initialProducts[0], size: 'M', qty: 1 },
             { product: initialProducts[1], size: 'M', qty: 1 }
         ];
+        let wishlist = JSON.parse(localStorage.getItem('bf_wishlist')) || [];
         
         let selectedProductForDetail = null;
         let activeDetailSize = 'M';
         let detailQuantity = 1;
         let selectedSizeFilter = null;
+        let adminOrderStatusFilter = 'all';
 
         // ON LOAD INITIALIZATION
         window.addEventListener('DOMContentLoaded', () => {
             renderFeaturedGrid();
             renderShopGrid();
+            updateWishlistUI();
             updateCartUI();
             renderUserOrdersTable();
             renderAdminTables();
@@ -853,6 +879,7 @@
             localStorage.setItem('bf_products', JSON.stringify(products));
             localStorage.setItem('bf_orders', JSON.stringify(orders));
             localStorage.setItem('bf_cart', JSON.stringify(cart));
+            localStorage.setItem('bf_wishlist', JSON.stringify(wishlist));
         }
 
         // VIEW NAVIGATION CONTROLLER
@@ -871,6 +898,8 @@
             document.querySelectorAll('.nav-link').forEach(link => link.classList.remove('active-nav'));
             const activeNavBtn = document.getElementById(`nav-${viewId}`);
             if (activeNavBtn) activeNavBtn.classList.add('active-nav');
+
+            if (viewId === 'wishlist') renderWishlist();
         }
 
         function toggleMobileMenu() {
@@ -888,6 +917,48 @@
             }, 3000);
         }
 
+        function toggleWishlist(productId) {
+            const product = products.find(item => item.id === productId);
+            if (!product) return;
+
+            const wishlistIndex = wishlist.indexOf(productId);
+            if (wishlistIndex === -1) {
+                wishlist.push(productId);
+                showToast(`${product.title} added to your wishlist`);
+            } else {
+                wishlist.splice(wishlistIndex, 1);
+                showToast(`${product.title} removed from your wishlist`);
+            }
+
+            saveState();
+            updateWishlistUI();
+            if (!document.getElementById('view-wishlist').classList.contains('hidden')) {
+                renderWishlist();
+            }
+        }
+
+        function updateWishlistUI() {
+            const count = document.getElementById('wishlistCount');
+            count.innerText = wishlist.length;
+            count.classList.toggle('hidden', wishlist.length === 0);
+
+            document.querySelectorAll('[data-wishlist-product-id]').forEach(button => {
+                const isSaved = wishlist.includes(button.dataset.wishlistProductId);
+                button.setAttribute('aria-pressed', String(isSaved));
+                button.setAttribute('aria-label', isSaved ? 'Remove from wishlist' : 'Add to wishlist');
+                button.classList.toggle('text-red-500', isSaved);
+                button.classList.toggle('text-brand-dark', !isSaved);
+                const icon = button.querySelector('i');
+                icon.classList.toggle('fa-solid', isSaved);
+                icon.classList.toggle('fa-regular', !isSaved);
+            });
+        }
+
+        function renderWishlist() {
+            const savedProducts = products.filter(product => wishlist.includes(product.id));
+            renderShopGrid(savedProducts, 'wishlistGrid');
+        }
+
         // RENDER FEATURED GRID
         function renderFeaturedGrid() {
             const grid = document.getElementById('featuredGrid');
@@ -895,7 +966,7 @@
                 <div class="bg-white rounded-2xl border border-brand-border overflow-hidden group shadow-sm hover:shadow-md transition-shadow">
                     <div class="relative aspect-[3/4] bg-brand-sand overflow-hidden">
                         <img src="${p.image}" alt="${p.title}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
-                        <button onclick="showToast('Added to Wishlist!')" class="absolute top-3 right-3 w-8 h-8 bg-white/80 backdrop-blur-md rounded-full flex items-center justify-center text-brand-dark hover:text-red-500 transition-colors">
+                        <button onclick="toggleWishlist('${p.id}')" data-wishlist-product-id="${p.id}" aria-label="Add to wishlist" aria-pressed="false" class="absolute top-3 right-3 w-8 h-8 bg-white/80 backdrop-blur-md rounded-full flex items-center justify-center text-brand-dark hover:text-red-500 transition-colors">
                             <i class="fa-regular fa-heart text-xs"></i>
                         </button>
                     </div>
@@ -910,16 +981,18 @@
                     </div>
                 </div>
             `).join('');
+            updateWishlistUI();
         }
 
         // RENDER SHOP GRID & FILTERING
-        function renderShopGrid(itemsToRender = products) {
-            const grid = document.getElementById('shopGrid');
+        function renderShopGrid(itemsToRender = products, gridId = 'shopGrid') {
+            const grid = document.getElementById(gridId);
             if (itemsToRender.length === 0) {
                 grid.innerHTML = `
                     <div class="col-span-full py-12 text-center text-brand-grayMuted">
-                        <i class="fa-solid fa-shirt text-4xl mb-2 text-brand-border"></i>
-                        <p>No outfits match your filter criteria.</p>
+                        <i class="fa-${gridId === 'wishlistGrid' ? 'regular fa-heart' : 'solid fa-shirt'} text-4xl mb-2 text-brand-border"></i>
+                        <p>${gridId === 'wishlistGrid' ? 'Your wishlist is empty. Save outfits you love to find them here.' : 'No outfits match your filter criteria.'}</p>
+                        ${gridId === 'wishlistGrid' ? '<button onclick="navigateTo(\'shop\')" class="mt-4 bg-brand-dark text-white px-5 py-2 rounded-lg text-xs font-semibold">Explore Outfits</button>' : ''}
                     </div>
                 `;
                 return;
@@ -929,6 +1002,9 @@
                 <div class="bg-white rounded-2xl border border-brand-border overflow-hidden group shadow-sm hover:shadow-md transition-all flex flex-col justify-between">
                     <div class="relative aspect-[3/4] bg-brand-sand overflow-hidden cursor-pointer" onclick="openProductDetail('${p.id}')">
                         <img src="${p.image}" alt="${p.title}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+                        <button onclick="event.stopPropagation(); toggleWishlist('${p.id}')" data-wishlist-product-id="${p.id}" aria-label="Add to wishlist" aria-pressed="false" class="absolute top-3 right-3 w-8 h-8 bg-white/80 backdrop-blur-md rounded-full flex items-center justify-center text-brand-dark hover:text-red-500 transition-colors">
+                            <i class="fa-regular fa-heart text-xs"></i>
+                        </button>
                     </div>
                     <div class="p-4 space-y-2">
                         <span class="text-[10px] uppercase font-bold text-brand-gold tracking-wider">${p.category}</span>
@@ -942,6 +1018,7 @@
                     </div>
                 </div>
             `).join('');
+            updateWishlistUI();
         }
 
         // FILTER CONTROL FUNCTIONS
@@ -1226,35 +1303,67 @@
         }
 
         // OWNER ADMIN DASHBOARD LOGIC
-        function handleAddProduct(e) {
+        async function handleAddProduct(e) {
             e.preventDefault();
-            const title = document.getElementById('newTitle').value;
+            const form = document.getElementById('addProductForm');
+            const submitButton = form.querySelector('button[type="submit"]');
+            const imageFile = document.getElementById('newImageFile').files[0];
+            const imageUrl = document.getElementById('newImg').value.trim();
+            const title = document.getElementById('newTitle').value.trim();
             const price = parseFloat(document.getElementById('newPrice').value);
             const category = document.getElementById('newCategory').value;
-            const image = document.getElementById('newImg').value;
             const desc = document.getElementById('newDesc').value || 'High-quality fashion outfit.';
 
-            const newProd = {
-                id: 'p' + Date.now(),
-                title,
-                price,
-                category,
-                image,
-                desc
-            };
+            if (!imageFile && !imageUrl) {
+                showToast('Choose a product image or enter an image URL.');
+                return;
+            }
 
-            products.unshift(newProd);
-            saveState();
+            submitButton.disabled = true;
+            submitButton.textContent = imageFile ? 'Uploading image...' : 'Adding product...';
 
-            // Refresh UI grids
-            renderFeaturedGrid();
-            renderShopGrid();
-            renderAdminTables();
-            updateAdminStats();
+            try {
+                let image = imageUrl;
+                if (imageFile) {
+                    const formData = new FormData();
+                    formData.append('file', imageFile);
+                    formData.append('upload_preset', 'branded');
 
-            // Reset form
-            document.getElementById('addProductForm').reset();
-            showToast('New product added to store!');
+                    const cloudResponse = await fetch('https://api.cloudinary.com/v1_1/upzfj7fw/image/upload', {
+                        method: 'POST',
+                        body: formData
+                    });
+                    const cloudData = await cloudResponse.json();
+                    if (!cloudResponse.ok || !cloudData.secure_url) {
+                        throw new Error(cloudData.error?.message || 'Cloudinary did not return an image URL.');
+                    }
+                    image = cloudData.secure_url;
+                }
+
+                const newProd = {
+                    id: 'p' + Date.now(),
+                    title,
+                    price,
+                    category,
+                    image,
+                    desc
+                };
+
+                products.unshift(newProd);
+                saveState();
+                renderFeaturedGrid();
+                renderShopGrid();
+                renderAdminTables();
+                updateAdminStats();
+                form.reset();
+                showToast('New product added to store!');
+            } catch (error) {
+                console.error('Unable to add product:', error);
+                showToast(`Product could not be added: ${error.message}`);
+            } finally {
+                submitButton.disabled = false;
+                submitButton.textContent = '+ Add Product to Store';
+            }
         }
 
         function deleteProduct(id) {
@@ -1279,6 +1388,21 @@
             }
         }
 
+        function openAdminMetric(metric) {
+            navigateTo('admin');
+
+            const targetId = metric === 'products' ? 'adminInventorySection' : 'adminOrdersSection';
+            setAdminOrderFilter(metric === 'pending' ? 'Processing' : 'all');
+
+            document.getElementById(targetId).scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+
+        function setAdminOrderFilter(status) {
+            adminOrderStatusFilter = status;
+            renderAdminTables();
+            document.getElementById('adminOrderFilterReset').classList.toggle('hidden', status === 'all');
+        }
+
         function renderAdminTables() {
             // Inventory Table
             const prodTbody = document.getElementById('adminProductsTable');
@@ -1300,7 +1424,10 @@
 
             // Admin Orders Table
             const orderTbody = document.getElementById('adminOrdersTable');
-            orderTbody.innerHTML = orders.map(o => `
+            const visibleOrders = adminOrderStatusFilter === 'all'
+                ? orders
+                : orders.filter(order => order.status === adminOrderStatusFilter);
+            orderTbody.innerHTML = visibleOrders.length ? visibleOrders.map(o => `
                 <tr>
                     <td class="p-3 font-mono font-bold">${o.id}</td>
                     <td class="p-3">${o.customer}</td>
@@ -1317,7 +1444,13 @@
                         </select>
                     </td>
                 </tr>
-            `).join('');
+            `).join('') : `
+                <tr>
+                    <td colspan="5" class="p-4 text-center text-brand-grayMuted">
+                        ${adminOrderStatusFilter === 'Processing' ? 'No pending orders.' : 'No orders found.'}
+                    </td>
+                </tr>
+            `;
         }
 
         function updateAdminStats() {
@@ -1337,12 +1470,7 @@
     ? 'http://127.0.0.1:5000'
     : 'https://branded-fits-backend.onrender.com';
 
-  // 2. Your existing product upload function
-  async function handleAddProduct(event) {
-    // ... your existing Cloudinary & upload code ...
-  }
-
-  // 3. PASTE YOUR processMoMoPayment FUNCTION RIGHT HERE:
+  // Payment processing
   function processMoMoPayment(orderData) {
     const handler = PaystackPop.setup({
       key: 'pk_test_YOUR_PAYSTACK_PUBLIC_KEY', // Remember to replace this with your actual key

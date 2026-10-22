@@ -1,8 +1,19 @@
   
         body {
-            background-color: #FDFBF7;
+            background-color: #92999E;
+            background-image: linear-gradient(135deg, #A1A7AB 0%, #92999E 100%);
+            background-attachment: fixed;
             color: #1A1A1A;
             font-family: 'Inter', sans-serif;
+        }
+        .hero-banner {
+            background: linear-gradient(135deg, #A1A7AB 0%, #92999E 100%);
+        }
+        .view-section .text-brand-grayMuted {
+            color: #252A2E;
+        }
+        .view-section .text-brand-gold {
+            color: #3A280F;
         }
         .heading-serif {
             font-family: 'Playfair Display', serif;
