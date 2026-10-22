@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Branded Fits - Look Good · Feel Good · Repeat</title>
+    <meta name="paystack-public-key" content="{{ paystack_public_key|tojson|forceescape }}">
     <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- Font Awesome Icons -->
@@ -775,7 +776,7 @@
     <!-- JAVASCRIPT APPLICATION LOGIC -->
     <script>
         // INITIAL SAMPLE PRODUCT DATA MATCHING THE BRAND BOARD
-        const PAYSTACK_PUBLIC_KEY = {{ paystack_public_key|tojson }};
+        const PAYSTACK_PUBLIC_KEY = JSON.parse(document.querySelector('meta[name="paystack-public-key"]').content);
 
         const initialProducts = [
             {
