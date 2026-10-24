@@ -123,6 +123,46 @@ body {
     color: #89643a;
 }
 
+.info-hero {
+    background: linear-gradient(180deg, #fbfaf7 0%, #f1eee7 100%);
+}
+
+.info-story-image {
+    background-image:
+        linear-gradient(0deg, rgba(26, 26, 26, 0.12), rgba(26, 26, 26, 0.12)),
+        url('https://images.unsplash.com/photo-1483985988355-763728e1935b?auto=format&fit=crop&q=80&w=1000');
+    background-position: center;
+    background-size: cover;
+}
+
+.contact-card {
+    display: block;
+    padding: 2rem 1.5rem;
+    border: 1px solid #e9e2d7;
+    border-radius: 1rem;
+    background: #fffefa;
+    text-align: center;
+    box-shadow: 0 8px 24px rgba(49, 41, 30, 0.06);
+    transition: transform 180ms ease, box-shadow 180ms ease;
+}
+
+a.contact-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 14px 28px rgba(49, 41, 30, 0.12);
+}
+
+.contact-icon {
+    display: flex;
+    width: 3rem;
+    height: 3rem;
+    margin: 0 auto 1rem;
+    align-items: center;
+    justify-content: center;
+    border-radius: 9999px;
+    background: #efe7db;
+    color: #89643a;
+}
+
 .home-page .hero-banner .text-brand-gold {
     color: #C89D66;
 }

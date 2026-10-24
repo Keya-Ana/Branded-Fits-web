@@ -1,0 +1,6 @@
+$env:PAYSTACK_PUBLIC_KEY = "pk_test_1d1b53188f58a59178b2a48641b3f6c033f51d96"
+$env:PAYSTACK_SECRET_KEY = "sk_test_e76a134d7ecccff72f77f2e98260fb6c5800b0b7"
+python app.py
+
+
+copy and paste the above code in the terminal to configure the paystack keys run the python server for the website

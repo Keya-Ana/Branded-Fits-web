@@ -43,10 +43,10 @@
 
                 <!-- DESKTOP NAVIGATION -->
                 <nav class="hidden md:flex space-x-8 text-sm font-medium">
-                    <button onclick="navigateTo('home')" id="nav-home" class="nav-link text-brand-dark hover:text-brand-gold py-2 transition-colors active-nav">Home</button>
+                    <button onclick="navigateTo('home')" id="nav-home" class="nav-link text-brand-dark hover:text-brand-gold py-2 transition-colors {% if initial_view|default('home') == 'home' %}active-nav{% endif %}">Home</button>
                     <button onclick="navigateTo('shop')" id="nav-shop" class="nav-link text-brand-dark hover:text-brand-gold py-2 transition-colors">Shop</button>
-                    <button onclick="navigateToSection('about-section')" class="nav-link text-brand-dark hover:text-brand-gold py-2 transition-colors">About</button>
-                    <button onclick="navigateToSection('contact-section')" class="nav-link text-brand-dark hover:text-brand-gold py-2 transition-colors">Contact</button>
+                    <button onclick="navigateTo('about')" id="nav-about" class="nav-link text-brand-dark hover:text-brand-gold py-2 transition-colors {% if initial_view == 'about' %}active-nav{% endif %}">About</button>
+                    <button onclick="navigateTo('contact')" id="nav-contact" class="nav-link text-brand-dark hover:text-brand-gold py-2 transition-colors {% if initial_view == 'contact' %}active-nav{% endif %}">Contact</button>
                 </nav>
 
                 <!-- ACTION ICONS -->
@@ -89,8 +89,8 @@
             </div>
             <button onclick="navigateTo('home'); toggleMobileMenu()" class="block w-full text-left py-2 px-3 rounded hover:bg-brand-sand font-medium">Home</button>
             <button onclick="navigateTo('shop'); toggleMobileMenu()" class="block w-full text-left py-2 px-3 rounded hover:bg-brand-sand font-medium">Shop</button>
-            <button onclick="navigateToSection('about-section'); toggleMobileMenu()" class="block w-full text-left py-2 px-3 rounded hover:bg-brand-sand font-medium">About</button>
-            <button onclick="navigateToSection('contact-section'); toggleMobileMenu()" class="block w-full text-left py-2 px-3 rounded hover:bg-brand-sand font-medium">Contact</button>
+            <button onclick="navigateTo('about'); toggleMobileMenu()" class="block w-full text-left py-2 px-3 rounded hover:bg-brand-sand font-medium">About</button>
+            <button onclick="navigateTo('contact'); toggleMobileMenu()" class="block w-full text-left py-2 px-3 rounded hover:bg-brand-sand font-medium">Contact</button>
             <button onclick="navigateTo('admin'); toggleMobileMenu()" class="block w-full text-left py-2 px-3 rounded hover:bg-brand-sand text-brand-gold font-semibold">Owner Dashboard</button>
         </div>
     </header>
@@ -107,7 +107,7 @@
         <!-- ========================================== -->
         <!-- 1. HOME PAGE VIEW                         -->
         <!-- ========================================== -->
-        <section id="view-home" class="view-section">
+        <section id="view-home" class="view-section {% if initial_view|default('home') != 'home' %}hidden{% endif %}">
             <!-- Hero Banner -->
             <div class="relative hero-banner py-16 md:py-24 px-4 sm:px-6 lg:px-8 overflow-hidden">
                 <div class="max-w-7xl mx-auto">
@@ -711,6 +711,57 @@
             </div>
         </section>
 
+        <section id="view-about" class="view-section {% if initial_view != 'about' %}hidden{% endif %}">
+            <section class="info-hero py-20 sm:py-28">
+                <div class="max-w-4xl mx-auto px-4 sm:px-6 text-center">
+                    <p class="text-sm font-semibold uppercase tracking-[0.25em] text-brand-gold mb-4">Our Story</p>
+                    <h1 class="heading-serif text-4xl sm:text-6xl font-bold text-brand-dark mb-6">Style that feels like you.</h1>
+                    <p class="max-w-2xl mx-auto text-lg leading-relaxed text-brand-grayMuted">Branded Fits is a Ghanaian fashion boutique bringing together thoughtful style, quality pieces, and looks for every mood.</p>
+                </div>
+            </section>
+            <section class="max-w-5xl mx-auto px-4 sm:px-6 py-16">
+                <div class="grid md:grid-cols-2 gap-10 items-center">
+                    <div class="info-story-image rounded-2xl min-h-72" role="img" aria-label="A curated fashion look"></div>
+                    <div>
+                        <p class="text-sm font-semibold uppercase tracking-[0.2em] text-brand-gold mb-3">Look Good · Feel Good · Repeat</p>
+                        <h2 class="heading-serif text-3xl font-bold mb-5">Fashion for your everyday</h2>
+                        <p class="text-brand-grayMuted leading-relaxed mb-4">We believe getting dressed should feel easy and confidence-boosting. From polished pieces to relaxed favourites, our collection is chosen to help you make every look your own.</p>
+                        <p class="text-brand-grayMuted leading-relaxed">Based in Accra, we bring contemporary fashion to customers across Ghana with nationwide delivery.</p>
+                    </div>
+                </div>
+            </section>
+        </section>
+
+        <section id="view-contact" class="view-section {% if initial_view != 'contact' %}hidden{% endif %}">
+            <section class="info-hero py-20 sm:py-28">
+                <div class="max-w-4xl mx-auto px-4 sm:px-6 text-center">
+                    <p class="text-sm font-semibold uppercase tracking-[0.25em] text-brand-gold mb-4">We’re here to help</p>
+                    <h1 class="heading-serif text-4xl sm:text-6xl font-bold text-brand-dark mb-6">Get in touch.</h1>
+                    <p class="max-w-2xl mx-auto text-lg leading-relaxed text-brand-grayMuted">Questions about an outfit, your order, or delivery? Reach out using the contact details below and our team will be happy to help.</p>
+                </div>
+            </section>
+            <section class="max-w-5xl mx-auto px-4 sm:px-6 py-12 pb-20">
+                <div class="grid sm:grid-cols-3 gap-5">
+                    <a href="tel:+233551234567" class="contact-card">
+                        <span class="contact-icon"><i class="fa-solid fa-phone"></i></span>
+                        <h2 class="heading-serif text-xl font-bold mb-2">Call us</h2>
+                        <p class="text-brand-grayMuted">+233 55 123 4567</p>
+                    </a>
+                    <a href="mailto:orders@brandedfits.com" class="contact-card">
+                        <span class="contact-icon"><i class="fa-solid fa-envelope"></i></span>
+                        <h2 class="heading-serif text-xl font-bold mb-2">Email us</h2>
+                        <p class="text-brand-grayMuted break-all">orders@brandedfits.com</p>
+                    </a>
+                    <div class="contact-card">
+                        <span class="contact-icon"><i class="fa-solid fa-location-dot"></i></span>
+                        <h2 class="heading-serif text-xl font-bold mb-2">Find us</h2>
+                        <p class="text-brand-grayMuted">Accra, Greater Accra Region, Ghana</p>
+                    </div>
+                </div>
+                <p class="text-center text-sm text-brand-grayMuted mt-8">We deliver nationwide across Ghana.</p>
+            </section>
+        </section>
+
     </main>
 
     <!-- FOOTER -->
@@ -731,6 +782,8 @@
                 <ul class="space-y-2 text-xs text-gray-300">
                     <li><button onclick="navigateTo('home')" class="hover:text-brand-gold">Home</button></li>
                     <li><button onclick="navigateTo('shop')" class="hover:text-brand-gold">Shop All Outfits</button></li>
+                    <li><button onclick="navigateTo('about')" class="hover:text-brand-gold">About</button></li>
+                    <li><button onclick="navigateTo('contact')" class="hover:text-brand-gold">Contact</button></li>
                     <li><button onclick="navigateTo('orders')" class="hover:text-brand-gold">My Orders</button></li>
                     <li><button onclick="navigateTo('admin')" class="hover:text-brand-gold">Owner Portal</button></li>
                 </ul>
@@ -843,6 +896,7 @@
 
         // ON LOAD INITIALIZATION
         window.addEventListener('DOMContentLoaded', async () => {
+            navigateTo('{{ initial_view|default("home") }}');
             await loadProductsFromStore();
             await loadAdminDashboardData();
             renderFeaturedGrid();
@@ -953,7 +1007,13 @@
         }
 
         // VIEW NAVIGATION CONTROLLER
-        function navigateTo(viewId) {
+        function navigateTo(viewId, updateHistory = true) {
+            const viewPaths = { about: '/about', contact: '/contact' };
+            const nextPath = viewPaths[viewId] || '/';
+            if (updateHistory && window.location.pathname !== nextPath) {
+                window.history.pushState({ viewId }, '', nextPath);
+            }
+
             // Hide all sections
             document.querySelectorAll('.view-section').forEach(sec => sec.classList.add('hidden'));
             
@@ -961,7 +1021,7 @@
             const target = document.getElementById(`view-${viewId}`);
             if (target) {
                 target.classList.remove('hidden');
-                document.body.classList.toggle('home-page', viewId === 'home');
+                document.body.classList.toggle('home-page', ['home', 'about', 'contact'].includes(viewId));
                 window.scrollTo({ top: 0, behavior: 'smooth' });
             }
 
@@ -973,6 +1033,11 @@
             if (viewId === 'wishlist') renderWishlist();
             if (viewId === 'admin') loadAdminDashboardData();
         }
+
+        window.addEventListener('popstate', event => {
+            const pathViews = { '/about': 'about', '/contact': 'contact' };
+            navigateTo(event.state?.viewId || pathViews[window.location.pathname] || 'home', false);
+        });
 
         function navigateToSection(sectionId) {
             navigateTo('home');

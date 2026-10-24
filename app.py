@@ -166,6 +166,24 @@ def home():
     )
 
 
+@app.route("/about")
+def about():
+    return render_template(
+        "index.html",
+        paystack_public_key=os.environ.get("PAYSTACK_PUBLIC_KEY", ""),
+        initial_view="about",
+    )
+
+
+@app.route("/contact")
+def contact():
+    return render_template(
+        "index.html",
+        paystack_public_key=os.environ.get("PAYSTACK_PUBLIC_KEY", ""),
+        initial_view="contact",
+    )
+
+
 @app.route("/api/products", methods=["GET"])
 def get_products():
     with get_db_connection() as connection:
