@@ -15,14 +15,7 @@
     <script src="{{ url_for('static', filename='script.js') }}"></script>
     <script src="https://js.paystack.co/v1/inline.js"></script>
 </head>
-<body class="min-h-screen flex flex-col justify-between selection:bg-brand-gold selection:text-white">
-
-    <!-- TOP ANNOUNCEMENT BAR -->
-    <div class="bg-brand-dark text-white text-xs py-2 px-4 text-center font-medium tracking-wide flex justify-between items-center px-6">
-        <span class="hidden sm:inline">✨ Nationwide Express Delivery Across Ghana | Pay with MoMo or Card</span>
-        <span class="w-full sm:w-auto text-center">Ghanaian Owned & Operated 🇬🇭 · Fast & Reliable</span>
-        <span class="hidden md:inline font-mono text-brand-gold">Helpline: +233 55 123 4567</span>
-    </div>
+<body class="home-page min-h-screen flex flex-col justify-between selection:bg-brand-gold selection:text-white">
 
     <!-- MAIN HEADER / NAVBAR -->
     <header class="sticky top-0 z-40 bg-brand-cream/95 backdrop-blur-md border-b border-brand-border transition-all">
@@ -51,12 +44,9 @@
                 <!-- DESKTOP NAVIGATION -->
                 <nav class="hidden md:flex space-x-8 text-sm font-medium">
                     <button onclick="navigateTo('home')" id="nav-home" class="nav-link text-brand-dark hover:text-brand-gold py-2 transition-colors active-nav">Home</button>
-                    <button onclick="navigateTo('shop')" id="nav-shop" class="nav-link text-brand-dark hover:text-brand-gold py-2 transition-colors">Shop All</button>
-                    <button onclick="navigateTo('orders')" id="nav-orders" class="nav-link text-brand-dark hover:text-brand-gold py-2 transition-colors">My Orders</button>
-                    <button onclick="navigateTo('admin')" id="nav-admin" class="nav-link text-brand-dark hover:text-brand-gold py-2 transition-colors flex items-center space-x-1">
-                        <i class="fa-solid fa-user-gear text-xs text-brand-gold"></i>
-                        <span>Owner Dashboard</span>
-                    </button>
+                    <button onclick="navigateTo('shop')" id="nav-shop" class="nav-link text-brand-dark hover:text-brand-gold py-2 transition-colors">Shop</button>
+                    <button onclick="navigateToSection('about-section')" class="nav-link text-brand-dark hover:text-brand-gold py-2 transition-colors">About</button>
+                    <button onclick="navigateToSection('contact-section')" class="nav-link text-brand-dark hover:text-brand-gold py-2 transition-colors">Contact</button>
                 </nav>
 
                 <!-- ACTION ICONS -->
@@ -67,16 +57,26 @@
                         <i class="fa-solid fa-magnifying-glass absolute left-3 top-2.5 text-xs text-gray-400"></i>
                     </div>
 
+                    <!-- Owner Dashboard -->
+                    <button onclick="navigateTo('admin')" aria-label="Owner Dashboard" title="Owner Dashboard" class="hidden md:block p-1 text-brand-dark hover:text-brand-gold transition-colors">
+                        <i class="fa-solid fa-user-gear text-xl"></i>
+                    </button>
+
+                    <!-- User Account -->
+                    <button onclick="navigateTo('orders')" aria-label="Open your account" class="p-1 text-brand-dark hover:text-brand-gold transition-colors">
+                        <i class="fa-regular fa-user text-xl"></i>
+                    </button>
+
                     <!-- Wishlist -->
                     <button onclick="navigateTo('wishlist')" aria-label="Open wishlist" class="relative p-1 text-brand-dark hover:text-brand-gold transition-colors">
                         <i class="fa-regular fa-heart text-xl"></i>
-                        <span id="wishlistCount" class="hidden absolute -top-1 -right-1 bg-brand-gold text-white text-[10px] w-4 h-4 rounded-full flex items-center justify-center font-bold">0</span>
+                        <span id="wishlistCount" class="absolute -top-1 -right-1 bg-brand-gold text-white text-[10px] w-4 h-4 rounded-full flex items-center justify-center font-bold">3</span>
                     </button>
 
                     <!-- Cart Drawer Trigger -->
                     <button onclick="navigateTo('cart')" class="relative p-1 text-brand-dark hover:text-brand-gold transition-colors">
                         <i class="fa-solid fa-bag-shopping text-xl"></i>
-                        <span id="cartCount" class="absolute -top-1 -right-1 bg-brand-dark text-white text-[10px] w-4 h-4 rounded-full flex items-center justify-center font-bold">0</span>
+                        <span id="cartCount" class="absolute -top-1 -right-1 bg-brand-dark text-white text-[10px] w-4 h-4 rounded-full flex items-center justify-center font-bold">2</span>
                     </button>
                 </div>
             </div>
@@ -88,9 +88,9 @@
                 <input type="text" onkeyup="handleSearch(event)" placeholder="Search outfits..." class="w-full bg-white border border-brand-border rounded-lg py-2 px-3 text-sm">
             </div>
             <button onclick="navigateTo('home'); toggleMobileMenu()" class="block w-full text-left py-2 px-3 rounded hover:bg-brand-sand font-medium">Home</button>
-            <button onclick="navigateTo('shop'); toggleMobileMenu()" class="block w-full text-left py-2 px-3 rounded hover:bg-brand-sand font-medium">Shop All Outfits</button>
-            <button onclick="navigateTo('wishlist'); toggleMobileMenu()" class="block w-full text-left py-2 px-3 rounded hover:bg-brand-sand font-medium">Wishlist</button>
-            <button onclick="navigateTo('orders'); toggleMobileMenu()" class="block w-full text-left py-2 px-3 rounded hover:bg-brand-sand font-medium">My Orders</button>
+            <button onclick="navigateTo('shop'); toggleMobileMenu()" class="block w-full text-left py-2 px-3 rounded hover:bg-brand-sand font-medium">Shop</button>
+            <button onclick="navigateToSection('about-section'); toggleMobileMenu()" class="block w-full text-left py-2 px-3 rounded hover:bg-brand-sand font-medium">About</button>
+            <button onclick="navigateToSection('contact-section'); toggleMobileMenu()" class="block w-full text-left py-2 px-3 rounded hover:bg-brand-sand font-medium">Contact</button>
             <button onclick="navigateTo('admin'); toggleMobileMenu()" class="block w-full text-left py-2 px-3 rounded hover:bg-brand-sand text-brand-gold font-semibold">Owner Dashboard</button>
         </div>
     </header>
@@ -110,33 +110,20 @@
         <section id="view-home" class="view-section">
             <!-- Hero Banner -->
             <div class="relative hero-banner py-16 md:py-24 px-4 sm:px-6 lg:px-8 overflow-hidden">
-                <div class="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
-                    <div class="z-10 space-y-6 text-center md:text-left">
-                        <span class="inline-block bg-brand-gold/20 text-brand-dark text-xs uppercase tracking-widest font-bold px-3 py-1 rounded-full border border-brand-gold/40">New Season Collection 2026</span>
-                        <h1 class="text-4xl md:text-6xl font-bold heading-serif text-brand-dark leading-tight">
+                <div class="max-w-7xl mx-auto">
+                    <div class="home-hero-copy max-w-2xl mx-auto md:mx-0 space-y-6 text-center md:text-left">
+                        <span class="hero-badge inline-block text-xs uppercase tracking-widest font-bold">New Season Collection 2026</span>
+                        <h1 class="text-4xl md:text-6xl font-bold heading-serif text-white leading-tight">
                             Trendy Outfits <br><span class="italic font-normal text-brand-gold">For Every Mood</span>
                         </h1>
-                        <p class="text-brand-grayMuted text-base md:text-lg max-w-md mx-auto md:mx-0">
+                        <p class="hero-subtitle text-base md:text-lg max-w-md mx-auto md:mx-0">
                             Quality styles. Affordable prices. Fast & reliable delivery across Ghana.
                         </p>
                         <div class="pt-2 flex flex-col sm:flex-row justify-center md:justify-start gap-4">
-                            <button onclick="navigateTo('shop')" class="bg-brand-dark text-white hover:bg-brand-gold transition-all duration-300 px-8 py-3.5 rounded-full font-medium tracking-wide shadow-lg flex items-center justify-center space-x-2 group">
+                            <button onclick="navigateTo('shop')" class="hero-cta transition-colors duration-300 px-5 py-2.5 rounded-md font-semibold flex items-center justify-center gap-2">
                                 <span>Shop Collection Now</span>
-                                <i class="fa-solid fa-arrow-right text-xs group-hover:translate-x-1 transition-transform"></i>
+                                <span aria-hidden="true">→</span>
                             </button>
-                        </div>
-                    </div>
-                    <!-- Hero Image Showcase -->
-                    <div class="relative flex justify-center">
-                        <div class="relative w-full max-w-md aspect-[4/5] rounded-3xl overflow-hidden shadow-2xl border-4 border-white">
-                            <img src="https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?auto=format&fit=crop&q=80&w=800" alt="Trendy Outfits Hero" class="w-full h-full object-cover">
-                            <div class="absolute bottom-4 left-4 right-4 bg-white/90 backdrop-blur-md p-4 rounded-2xl shadow-md border border-white/50">
-                                <p class="text-xs font-bold text-brand-dark uppercase">Featured Fit</p>
-                                <div class="flex justify-between items-center mt-1">
-                                    <span class="text-sm font-semibold">Elegant Silk Set</span>
-                                    <span class="text-sm font-bold text-brand-gold">GH₵ 220</span>
-                                </div>
-                            </div>
                         </div>
                     </div>
                 </div>
@@ -176,7 +163,7 @@
             </div>
 
             <!-- Featured Collection -->
-            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+            <div class="home-featured-panel max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
                 <div class="flex justify-between items-end mb-8">
                     <div>
                         <span class="text-xs font-bold text-brand-gold uppercase tracking-wider">Curated Styles</span>
@@ -729,7 +716,7 @@
     <!-- FOOTER -->
     <footer class="bg-brand-dark text-white pt-12 pb-8 border-t border-brand-gold/20 mt-16">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 grid grid-cols-1 md:grid-cols-4 gap-8">
-            <div class="space-y-3">
+            <div id="about-section" class="space-y-3 scroll-mt-24">
                 <div class="flex items-center space-x-2">
                     <div class="w-7 h-7 border border-brand-gold rounded-full flex items-center justify-center bg-brand-charcoal">
                         <i class="fa-solid fa-shirt text-brand-gold text-xs"></i>
@@ -758,7 +745,7 @@
                 </div>
             </div>
 
-            <div>
+            <div id="contact-section" class="scroll-mt-24">
                 <h4 class="font-bold text-sm text-brand-gold mb-3 uppercase tracking-wider">Contact & Location</h4>
                 <p class="text-xs text-gray-300 leading-relaxed">
                     Accra, Greater Accra Region, Ghana <br>
@@ -839,11 +826,14 @@
         // APP STATE (PERFORM LOCALSTORAGE LOAD/SAVE)
         let products = JSON.parse(localStorage.getItem('bf_products')) || initialProducts;
         let orders = JSON.parse(localStorage.getItem('bf_orders')) || initialOrders;
+        let adminOrders = [];
+        let adminDashboardStats = null;
         let cart = JSON.parse(localStorage.getItem('bf_cart')) || [
             { product: initialProducts[0], size: 'M', qty: 1 },
             { product: initialProducts[1], size: 'M', qty: 1 }
         ];
         let wishlist = JSON.parse(localStorage.getItem('bf_wishlist')) || [];
+        let wishlistHasChanged = false;
         
         let selectedProductForDetail = null;
         let activeDetailSize = 'M';
@@ -852,7 +842,9 @@
         let adminOrderStatusFilter = 'all';
 
         // ON LOAD INITIALIZATION
-        window.addEventListener('DOMContentLoaded', () => {
+        window.addEventListener('DOMContentLoaded', async () => {
+            await loadProductsFromStore();
+            await loadAdminDashboardData();
             renderFeaturedGrid();
             renderShopGrid();
             updateWishlistUI();
@@ -861,7 +853,96 @@
             renderAdminTables();
             updateAdminStats();
             completePaystackReturn();
+            window.setInterval(() => {
+                if (!document.getElementById('view-admin').classList.contains('hidden')) {
+                    loadAdminDashboardData();
+                }
+            }, 30000);
         });
+
+        async function loadAdminDashboardData() {
+            try {
+                const response = await fetch('/api/admin/dashboard');
+                const dashboard = await response.json();
+                if (!response.ok) {
+                    throw new Error(dashboard.error || 'Dashboard data could not be loaded.');
+                }
+                if (!dashboard.stats || !Array.isArray(dashboard.orders)) {
+                    throw new Error('The dashboard returned invalid data.');
+                }
+
+                adminDashboardStats = dashboard.stats;
+                adminOrders = dashboard.orders.map(order => ({
+                    ...order,
+                    id: `#BF${String(order.id).padStart(6, '0')}`,
+                    amount: Number(order.amount)
+                }));
+                updateAdminStats();
+                renderAdminTables();
+            } catch (error) {
+                console.error('Unable to load owner dashboard data:', error);
+                showToast(`Dashboard data could not be refreshed: ${error.message}`);
+            }
+        }
+
+        async function loadProductsFromStore() {
+            const cachedProducts = products;
+            const demoProductIds = new Set(initialProducts.map(product => String(product.id)));
+
+            try {
+                const response = await fetch('/api/products');
+                const storedProducts = await response.json();
+                if (!response.ok) {
+                    throw new Error(storedProducts.error || 'The product database could not be loaded.');
+                }
+                if (!Array.isArray(storedProducts)) {
+                    throw new Error('The product database returned an invalid response.');
+                }
+
+                for (const cachedProduct of cachedProducts) {
+                    if (demoProductIds.has(String(cachedProduct.id))) continue;
+                    const alreadyStored = storedProducts.some(product =>
+                        String(product.id) === String(cachedProduct.id)
+                        || (product.name === cachedProduct.title && product.image === cachedProduct.image)
+                    );
+                    if (alreadyStored) continue;
+
+                    const saveResponse = await fetch('/api/products', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({
+                            name: cachedProduct.title,
+                            price: cachedProduct.price,
+                            category: cachedProduct.category,
+                            image: cachedProduct.image,
+                            description: cachedProduct.desc || ''
+                        })
+                    });
+                    const savedProduct = await saveResponse.json();
+                    if (!saveResponse.ok) {
+                        throw new Error(savedProduct.error || `Could not restore ${cachedProduct.title} to the product database.`);
+                    }
+                    storedProducts.push(savedProduct);
+                }
+
+                products = [
+                    ...initialProducts,
+                    ...storedProducts.map(product => ({
+                        id: String(product.id),
+                        title: product.name,
+                        price: product.price,
+                        category: product.category,
+                        image: product.image,
+                        desc: product.description || ''
+                    }))
+                ];
+                saveState();
+            } catch (error) {
+                console.error('Unable to load products from the store database:', error);
+                products = cachedProducts;
+                showToast(`Saved products could not be synced: ${error.message}`);
+            }
+        }
 
         // SAVE STATE TO LOCALSTORAGE
         function saveState() {
@@ -880,6 +961,7 @@
             const target = document.getElementById(`view-${viewId}`);
             if (target) {
                 target.classList.remove('hidden');
+                document.body.classList.toggle('home-page', viewId === 'home');
                 window.scrollTo({ top: 0, behavior: 'smooth' });
             }
 
@@ -889,6 +971,12 @@
             if (activeNavBtn) activeNavBtn.classList.add('active-nav');
 
             if (viewId === 'wishlist') renderWishlist();
+            if (viewId === 'admin') loadAdminDashboardData();
+        }
+
+        function navigateToSection(sectionId) {
+            navigateTo('home');
+            document.getElementById(sectionId)?.scrollIntoView({ behavior: 'smooth' });
         }
 
         function toggleMobileMenu() {
@@ -910,6 +998,7 @@
             const product = products.find(item => item.id === productId);
             if (!product) return;
 
+            wishlistHasChanged = true;
             const wishlistIndex = wishlist.indexOf(productId);
             if (wishlistIndex === -1) {
                 wishlist.push(productId);
@@ -928,8 +1017,9 @@
 
         function updateWishlistUI() {
             const count = document.getElementById('wishlistCount');
-            count.innerText = wishlist.length;
-            count.classList.toggle('hidden', wishlist.length === 0);
+            const showDefaultCount = wishlist.length === 0 && !wishlistHasChanged;
+            count.innerText = showDefaultCount ? '3' : wishlist.length;
+            count.classList.toggle('hidden', wishlist.length === 0 && !showDefaultCount);
 
             document.querySelectorAll('[data-wishlist-product-id]').forEach(button => {
                 const isSaved = wishlist.includes(button.dataset.wishlistProductId);
@@ -1422,21 +1512,36 @@
                     image = cloudData.secure_url;
                 }
 
+                const response = await fetch('/api/products', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        name: title,
+                        price,
+                        category,
+                        image,
+                        description: desc
+                    })
+                });
+                const savedProduct = await response.json();
+                if (!response.ok) {
+                    throw new Error(savedProduct.error || 'The product could not be saved to the database.');
+                }
+
                 const newProd = {
-                    id: 'p' + Date.now(),
-                    title,
-                    price,
-                    category,
-                    image,
-                    desc
+                    id: String(savedProduct.id),
+                    title: savedProduct.name,
+                    price: savedProduct.price,
+                    category: savedProduct.category,
+                    image: savedProduct.image,
+                    desc: savedProduct.description
                 };
 
                 products.unshift(newProd);
                 saveState();
                 renderFeaturedGrid();
                 renderShopGrid();
-                renderAdminTables();
-                updateAdminStats();
+                await loadAdminDashboardData();
                 form.reset();
                 showToast('New product added to store!');
             } catch (error) {
@@ -1448,25 +1553,47 @@
             }
         }
 
-        function deleteProduct(id) {
+        async function deleteProduct(id) {
+            try {
+                if (/^\d+$/.test(String(id))) {
+                    const response = await fetch(`/api/products/${id}`, { method: 'DELETE' });
+                    const result = await response.json();
+                    if (!response.ok) {
+                        throw new Error(result.error || 'Database request failed.');
+                    }
+                }
+            } catch (error) {
+                console.error('Unable to remove product:', error);
+                showToast(`Product could not be removed: ${error.message}`);
+                return;
+            }
+
             products = products.filter(p => p.id !== id);
             saveState();
             renderFeaturedGrid();
             renderShopGrid();
-            renderAdminTables();
-            updateAdminStats();
+            await loadAdminDashboardData();
             showToast('Product removed');
         }
 
-        function updateOrderStatus(orderId, newStatus) {
-            const order = orders.find(o => o.id === orderId);
-            if (order) {
-                order.status = newStatus;
-                saveState();
-                renderUserOrdersTable();
-                renderAdminTables();
-                updateAdminStats();
+        async function updateOrderStatus(orderId, newStatus) {
+            const numericOrderId = String(orderId).replace(/^#BF0*/, '');
+            try {
+                const response = await fetch(`/api/orders/${numericOrderId}/status`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ status: newStatus })
+                });
+                const result = await response.json();
+                if (!response.ok) {
+                    throw new Error(result.error || 'Order status could not be updated.');
+                }
+
+                await loadAdminDashboardData();
                 showToast(`Order ${orderId} updated to ${newStatus}`);
+            } catch (error) {
+                console.error('Unable to update order status:', error);
+                showToast(`Order status could not be updated: ${error.message}`);
             }
         }
 
@@ -1474,7 +1601,7 @@
             navigateTo('admin');
 
             const targetId = metric === 'products' ? 'adminInventorySection' : 'adminOrdersSection';
-            setAdminOrderFilter(metric === 'pending' ? 'Processing' : 'all');
+            setAdminOrderFilter(metric === 'pending' ? 'pending' : 'all');
 
             document.getElementById(targetId).scrollIntoView({ behavior: 'smooth', block: 'start' });
         }
@@ -1488,7 +1615,8 @@
         function renderAdminTables() {
             // Inventory Table
             const prodTbody = document.getElementById('adminProductsTable');
-            prodTbody.innerHTML = products.map(p => `
+            const inventoryProducts = products.filter(product => /^\d+$/.test(String(product.id)));
+            prodTbody.innerHTML = inventoryProducts.map(p => `
                 <tr>
                     <td class="p-3 flex items-center space-x-2">
                         <img src="${p.image}" class="w-8 h-10 object-cover rounded">
@@ -1507,8 +1635,10 @@
             // Admin Orders Table
             const orderTbody = document.getElementById('adminOrdersTable');
             const visibleOrders = adminOrderStatusFilter === 'all'
-                ? orders
-                : orders.filter(order => order.status === adminOrderStatusFilter);
+                ? adminOrders
+                : adminOrderStatusFilter === 'pending'
+                    ? adminOrders.filter(order => !['Delivered', 'Cancelled'].includes(order.status))
+                    : adminOrders.filter(order => order.status === adminOrderStatusFilter);
             orderTbody.innerHTML = visibleOrders.length ? visibleOrders.map(o => `
                 <tr>
                     <td class="p-3 font-mono font-bold">${o.id}</td>
@@ -1519,84 +1649,32 @@
                     </td>
                     <td class="p-3 text-right">
                         <select onchange="updateOrderStatus('${o.id}', this.value)" class="border border-brand-border text-[11px] rounded p-1 bg-white">
-                            <option value="Processing" ${o.status==='Processing'?'selected':''}>Processing</option>
-                            <option value="Shipped" ${o.status==='Shipped'?'selected':''}>Shipped</option>
-                            <option value="Delivered" ${o.status==='Delivered'?'selected':''}>Delivered</option>
-                            <option value="Cancelled" ${o.status==='Cancelled'?'selected':''}>Cancelled</option>
+                            ${o.paymentStatus !== 'Paid'
+                                ? `<option value="Pending Payment" selected disabled>Pending Payment</option><option value="Cancelled" ${o.status==='Cancelled'?'selected':''}>Cancelled</option>`
+                                : `<option value="Processing" ${o.status==='Processing'?'selected':''}>Processing</option>
+                                   <option value="Shipped" ${o.status==='Shipped'?'selected':''}>Shipped</option>
+                                   <option value="Delivered" ${o.status==='Delivered'?'selected':''}>Delivered</option>
+                                   <option value="Cancelled" ${o.status==='Cancelled'?'selected':''}>Cancelled</option>`}
                         </select>
                     </td>
                 </tr>
             `).join('') : `
                 <tr>
                     <td colspan="5" class="p-4 text-center text-brand-grayMuted">
-                        ${adminOrderStatusFilter === 'Processing' ? 'No pending orders.' : 'No orders found.'}
+                        ${adminOrderStatusFilter === 'pending' ? 'No pending orders.' : 'No orders found.'}
                     </td>
                 </tr>
             `;
         }
 
         function updateAdminStats() {
-            document.getElementById('adminStatOrders').innerText = orders.length;
-            const totalRev = orders.reduce((sum, o) => sum + o.amount, 0);
-            document.getElementById('adminStatRevenue').innerText = `GH₵ ${totalRev.toLocaleString()}`;
-            const pending = orders.filter(o => o.status === 'Processing').length;
-            document.getElementById('adminStatPending').innerText = pending;
-            document.getElementById('adminStatProducts').innerText = products.length;
+            if (!adminDashboardStats) return;
+            document.getElementById('adminStatOrders').innerText = adminDashboardStats.totalOrders;
+            document.getElementById('adminStatRevenue').innerText =
+                `GH₵ ${Number(adminDashboardStats.revenue).toLocaleString()}`;
+            document.getElementById('adminStatPending').innerText = adminDashboardStats.pendingOrders;
+            document.getElementById('adminStatProducts').innerText = adminDashboardStats.activeProducts;
         }
-
-        <!-- Scroll down near the bottom of index.html -->
-
-
-  // 1. API Base URL
-  const API_BASE_URL = (window.location.hostname === '127.0.0.1' || window.location.hostname === 'localhost')
-    ? 'http://127.0.0.1:5000'
-    : 'https://branded-fits-backend.onrender.com';
-
-  // 2. Your existing product upload function
-  async function handleAddProduct(event) {
-    // ... your existing Cloudinary & upload code ...
-  }
-
-  // 3. PASTE YOUR processMoMoPayment FUNCTION RIGHT HERE:
-  function processMoMoPayment(orderData) {
-    const handler = PaystackPop.setup({
-      key: 'pk_test_YOUR_PAYSTACK_PUBLIC_KEY', // Remember to replace this with your actual key
-      email: orderData.email || 'customer@email.com',
-      amount: Math.round(orderData.totalPrice * 100), // Converted to pesewas
-      currency: 'GHS',
-      ref: 'BF_' + Math.floor((Math.random() * 1000000000) + 1),
-      metadata: {
-        custom_fields: [
-          { display_name: "Customer Name", variable_name: "customer_name", value: orderData.fullName },
-          { display_name: "Phone Number", variable_name: "phone_number", value: orderData.phone },
-          { display_name: "Delivery Address", variable_name: "address", value: orderData.address },
-          { display_name: "Region", variable_name: "region", value: orderData.region }
-        ]
-      },
-      callback: function(response) {
-        // Sends order details to Flask backend after MoMo succeeds
-        fetch(`${API_BASE_URL}/api/orders`, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            ...orderData,
-            paymentReference: response.reference,
-            paymentStatus: 'Paid'
-          })
-        })
-        .then(res => res.json())
-        .then(data => {
-          alert('Payment Successful! Order Reference: ' + response.reference);
-          window.location.reload();
-        });
-      },
-      onClose: function() {
-        alert('Transaction cancelled.');
-      }
-    });
-
-    handler.openIframe();
-  }
 
     </script>
 

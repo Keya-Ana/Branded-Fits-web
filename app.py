@@ -50,9 +50,17 @@ def init_db():
                 price REAL NOT NULL,
                 category TEXT,
                 image TEXT NOT NULL,
+                description TEXT NOT NULL DEFAULT '',
                 status TEXT DEFAULT 'active'
             )
         """)
+        product_columns = {
+            row["name"] for row in connection.execute("PRAGMA table_info(products)")
+        }
+        if "description" not in product_columns:
+            connection.execute(
+                "ALTER TABLE products ADD COLUMN description TEXT NOT NULL DEFAULT ''"
+            )
         connection.execute("""
             CREATE TABLE IF NOT EXISTS orders (
                 id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -162,7 +170,12 @@ def home():
 def get_products():
     with get_db_connection() as connection:
         rows = connection.execute(
-            "SELECT id, name, price, category, image FROM products WHERE status = 'active'"
+            """
+            SELECT id, name, price, category, image, description
+            FROM products
+            WHERE status = 'active'
+            ORDER BY id DESC
+            """
         ).fetchall()
     return jsonify([
         {
@@ -171,9 +184,81 @@ def get_products():
             "price": row["price"],
             "category": row["category"],
             "image": row["image"],
+            "description": row["description"],
         }
         for row in rows
     ])
+
+
+@app.route("/api/admin/dashboard", methods=["GET"])
+def get_admin_dashboard():
+    with get_db_connection() as connection:
+        order_rows = connection.execute(
+            """
+            SELECT id, customer_name, total_amount, order_status, payment_status
+            FROM orders
+            ORDER BY id DESC
+            """
+        ).fetchall()
+        product_count = connection.execute(
+            "SELECT COUNT(*) FROM products WHERE status = 'active'"
+        ).fetchone()[0]
+        revenue = connection.execute(
+            """
+            SELECT COALESCE(SUM(total_amount), 0)
+            FROM orders
+            WHERE payment_status = 'Paid'
+            """
+        ).fetchone()[0]
+
+    orders = [
+        {
+            "id": row["id"],
+            "customer": row["customer_name"] or "Customer",
+            "amount": row["total_amount"] or 0,
+            "status": row["order_status"],
+            "paymentStatus": row["payment_status"],
+        }
+        for row in order_rows
+    ]
+    return jsonify({
+        "stats": {
+            "totalOrders": len(orders),
+            "revenue": revenue,
+            "pendingOrders": sum(
+                order["status"] not in ("Delivered", "Cancelled")
+                for order in orders
+            ),
+            "activeProducts": product_count,
+        },
+        "orders": orders,
+    })
+
+
+@app.route("/api/orders/<int:order_id>/status", methods=["POST"])
+def update_order_status(order_id):
+    data = request.get_json(silent=True)
+    if not isinstance(data, dict):
+        return jsonify({"error": "Order status must be submitted as JSON."}), 400
+
+    status = data.get("status")
+    allowed_statuses = {"Processing", "Shipped", "Delivered", "Cancelled"}
+    if status not in allowed_statuses:
+        return jsonify({"error": "Choose a valid order status."}), 400
+
+    with get_db_connection() as connection:
+        order = connection.execute(
+            "SELECT payment_status FROM orders WHERE id = ?", (order_id,)
+        ).fetchone()
+        if order is None:
+            return jsonify({"error": "Order not found."}), 404
+        if order["payment_status"] != "Paid" and status in {"Processing", "Shipped", "Delivered"}:
+            return jsonify({"error": "An unpaid order cannot be processed for delivery."}), 409
+        connection.execute(
+            "UPDATE orders SET order_status = ? WHERE id = ?",
+            (status, order_id),
+        )
+    return jsonify({"id": order_id, "status": status})
 
 
 @app.route("/api/products", methods=["POST"])
@@ -184,6 +269,11 @@ def add_product():
     required_fields = ("name", "price", "category", "image")
     if any(not data.get(field) for field in required_fields):
         return jsonify({"error": "Name, price, category and image are required."}), 400
+    if not all(isinstance(data[field], str) for field in ("name", "category", "image")):
+        return jsonify({"error": "Product name, category and image must be text."}), 400
+    description = data.get("description", "")
+    if not isinstance(description, str):
+        return jsonify({"error": "Product description must be text."}), 400
 
     try:
         price = Decimal(str(data["price"]))
@@ -194,11 +284,28 @@ def add_product():
 
     with get_db_connection() as connection:
         cursor = connection.execute(
-            "INSERT INTO products (name, price, category, image) VALUES (?, ?, ?, ?)",
-            (data["name"], str(price), data["category"], data["image"]),
+            """
+            INSERT INTO products (name, price, category, image, description)
+            VALUES (?, ?, ?, ?, ?)
+            """,
+            (
+                data["name"].strip(),
+                str(price),
+                data["category"].strip(),
+                data["image"].strip(),
+                description.strip(),
+            ),
         )
         product_id = cursor.lastrowid
-    return jsonify({"id": product_id, "message": "Product saved successfully"}), 201
+    return jsonify({
+        "id": product_id,
+        "name": data["name"].strip(),
+        "price": float(price),
+        "category": data["category"].strip(),
+        "image": data["image"].strip(),
+        "description": description.strip(),
+        "message": "Product saved successfully",
+    }), 201
 
 
 @app.route("/api/products/<int:prod_id>", methods=["DELETE"])
