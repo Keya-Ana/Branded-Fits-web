@@ -177,16 +177,16 @@
         <!-- ========================================== -->
         <!-- 2. SHOP / ALL OUTFITS VIEW                 -->
         <!-- ========================================== -->
-        <section id="view-shop" class="view-section hidden py-8 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="mb-6 flex flex-col md:flex-row justify-between items-start md:items-center pb-4 border-b border-brand-border gap-4">
+        <section id="view-shop" class="view-section hidden shop-page max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="shop-heading-row">
                 <div>
-                    <h1 class="text-2xl md:text-3xl font-bold heading-serif">All Outfits</h1>
-                    <p class="text-xs text-brand-grayMuted">Browse our latest fashionable apparel collection</p>
+                    <h1 class="shop-title heading-serif">All Outfits</h1>
+                    <p class="shop-description">Browse our latest fashionable apparel collection</p>
                 </div>
                 <!-- Sort Dropdown -->
-                <div class="flex items-center space-x-2">
-                    <label class="text-xs font-medium text-brand-grayMuted">Sort by:</label>
-                    <select id="sortSelect" onchange="applyFilters()" class="bg-white border border-brand-border text-xs rounded-lg p-2 font-medium focus:outline-none focus:border-brand-gold">
+                <div class="shop-sort">
+                    <label for="sortSelect">Sort by</label>
+                    <select id="sortSelect" onchange="applyFilters()">
                         <option value="newest">Newest First</option>
                         <option value="price-low">Price: Low to High</option>
                         <option value="price-high">Price: High to Low</option>
@@ -194,66 +194,66 @@
                 </div>
             </div>
 
-            <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
+            <div class="shop-layout grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-6 lg:gap-8">
                 <!-- SIDEBAR FILTERS -->
-                <aside class="space-y-6 bg-white p-5 rounded-2xl border border-brand-border h-fit">
-                    <div>
-                        <h3 class="font-bold text-sm text-brand-dark mb-3 uppercase tracking-wider">Categories</h3>
-                        <div class="space-y-2 text-sm text-brand-grayMuted" id="categoryFilters">
-                            <label class="flex items-center space-x-2 cursor-pointer hover:text-brand-dark">
+                <aside class="shop-filters md:col-span-1" aria-label="Filter outfits">
+                    <div class="shop-filter-section">
+                        <h2 class="shop-filter-heading">Categories</h2>
+                        <div class="shop-category-list" id="categoryFilters">
+                            <label class="shop-filter-option">
                                 <input type="radio" name="category" value="all" checked onchange="applyFilters()" class="accent-brand-gold">
                                 <span>All Categories</span>
                             </label>
-                            <label class="flex items-center space-x-2 cursor-pointer hover:text-brand-dark">
+                            <label class="shop-filter-option">
                                 <input type="radio" name="category" value="Dresses" onchange="applyFilters()" class="accent-brand-gold">
                                 <span>Dresses</span>
                             </label>
-                            <label class="flex items-center space-x-2 cursor-pointer hover:text-brand-dark">
+                            <label class="shop-filter-option">
                                 <input type="radio" name="category" value="Tops" onchange="applyFilters()" class="accent-brand-gold">
                                 <span>Tops</span>
                             </label>
-                            <label class="flex items-center space-x-2 cursor-pointer hover:text-brand-dark">
+                            <label class="shop-filter-option">
                                 <input type="radio" name="category" value="Co-ords" onchange="applyFilters()" class="accent-brand-gold">
                                 <span>Co-ords & Sets</span>
                             </label>
-                            <label class="flex items-center space-x-2 cursor-pointer hover:text-brand-dark">
+                            <label class="shop-filter-option">
                                 <input type="radio" name="category" value="Jumpsuits" onchange="applyFilters()" class="accent-brand-gold">
                                 <span>Jumpsuits</span>
                             </label>
                         </div>
                     </div>
 
-                    <div class="border-t border-brand-border pt-4">
-                        <h3 class="font-bold text-sm text-brand-dark mb-3 uppercase tracking-wider">Size</h3>
+                    <div class="shop-filter-section">
+                        <h2 class="shop-filter-heading">Size</h2>
                         <div class="flex flex-wrap gap-2" id="sizeFilters">
-                            <button onclick="toggleSizeFilter('XS', this)" class="size-btn w-9 h-9 rounded-lg border border-brand-border text-xs font-semibold hover:border-brand-gold transition-colors">XS</button>
-                            <button onclick="toggleSizeFilter('S', this)" class="size-btn w-9 h-9 rounded-lg border border-brand-border text-xs font-semibold hover:border-brand-gold transition-colors">S</button>
-                            <button onclick="toggleSizeFilter('M', this)" class="size-btn w-9 h-9 rounded-lg border border-brand-border text-xs font-semibold hover:border-brand-gold transition-colors">M</button>
-                            <button onclick="toggleSizeFilter('L', this)" class="size-btn w-9 h-9 rounded-lg border border-brand-border text-xs font-semibold hover:border-brand-gold transition-colors">L</button>
-                            <button onclick="toggleSizeFilter('XL', this)" class="size-btn w-9 h-9 rounded-lg border border-brand-border text-xs font-semibold hover:border-brand-gold transition-colors">XL</button>
+                            <button onclick="toggleSizeFilter('XS', this)" class="size-btn shop-size-btn">XS</button>
+                            <button onclick="toggleSizeFilter('S', this)" class="size-btn shop-size-btn">S</button>
+                            <button onclick="toggleSizeFilter('M', this)" class="size-btn shop-size-btn">M</button>
+                            <button onclick="toggleSizeFilter('L', this)" class="size-btn shop-size-btn">L</button>
+                            <button onclick="toggleSizeFilter('XL', this)" class="size-btn shop-size-btn">XL</button>
                         </div>
                     </div>
 
-                    <div class="border-t border-brand-border pt-4">
-                        <div class="flex justify-between items-center mb-2">
-                            <h3 class="font-bold text-sm text-brand-dark uppercase tracking-wider">Max Price</h3>
-                            <span id="priceValue" class="text-xs font-bold text-brand-gold">GH₵ 400</span>
+                    <div class="shop-filter-section">
+                        <div class="shop-price-heading">
+                            <h2 class="shop-filter-heading">Max Price</h2>
+                            <span id="priceValue" class="shop-price-value">GH₵ 400</span>
                         </div>
-                        <input type="range" id="priceRange" min="50" max="400" step="10" value="400" oninput="updatePriceFilter(this.value)" class="w-full accent-brand-gold">
-                        <div class="flex justify-between text-[10px] text-brand-grayMuted mt-1">
+                        <input type="range" id="priceRange" min="50" max="400" step="10" value="400" oninput="updatePriceFilter(this.value)" class="shop-price-range">
+                        <div class="shop-price-limits">
                             <span>GH₵ 50</span>
                             <span>GH₵ 400</span>
                         </div>
                     </div>
 
-                    <button onclick="resetFilters()" class="w-full text-center text-xs font-semibold text-brand-gold hover:underline pt-2">
+                    <button onclick="resetFilters()" class="shop-reset-button">
                         Reset All Filters
                     </button>
                 </aside>
 
                 <!-- SHOP PRODUCT GRID -->
-                <main class="md:col-span-3">
-                    <div id="shopGrid" class="grid grid-cols-2 sm:grid-cols-3 gap-4 md:gap-6">
+                <main class="shop-results md:col-span-2 lg:col-span-3">
+                    <div id="shopGrid" class="shop-grid grid grid-cols-2 lg:grid-cols-3 gap-4 lg:gap-6">
                         <!-- Rendered dynamically -->
                     </div>
                 </main>
@@ -263,98 +263,78 @@
         <!-- ========================================== -->
         <!-- 3. PRODUCT DETAIL PAGE VIEW                -->
         <!-- ========================================== -->
-        <section id="view-product" class="view-section hidden py-10 max-w-6xl mx-auto px-4">
-            <button onclick="navigateTo('shop')" class="mb-6 inline-flex items-center space-x-2 text-xs font-bold uppercase tracking-wider text-brand-grayMuted hover:text-brand-dark">
+        <section id="view-product" class="view-section hidden product-detail-page max-w-6xl mx-auto px-4">
+            <button onclick="navigateTo('shop')" class="product-back">
                 <i class="fa-solid fa-arrow-left"></i>
                 <span>Back to Shop</span>
             </button>
 
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-10 bg-white p-6 md:p-10 rounded-3xl border border-brand-border shadow-sm">
+            <div class="product-detail-layout">
                 <!-- Gallery -->
-                <div class="space-y-4">
-                    <div class="aspect-[3/4] rounded-2xl overflow-hidden bg-brand-sand border border-brand-border">
-                        <img id="detailImg" src="" alt="Product Detail" class="w-full h-full object-cover">
-                    </div>
+                <div class="product-detail-media">
+                    <img id="detailImg" src="" alt="Product image" class="product-detail-image">
                 </div>
 
                 <!-- Product Info -->
-                <div class="flex flex-col justify-between space-y-6">
+                <div class="product-detail-info">
                     <div>
-                        <span id="detailCategory" class="text-xs uppercase tracking-widest text-brand-gold font-bold">Category</span>
-                        <h1 id="detailTitle" class="text-3xl font-bold heading-serif text-brand-dark mt-1">Product Title</h1>
+                        <span id="detailCategory" class="product-detail-category">Category</span>
+                        <h1 id="detailTitle" class="product-detail-title heading-serif">Product Title</h1>
                         
-                        <div class="flex items-center space-x-3 mt-2">
-                            <span id="detailPrice" class="text-2xl font-bold text-brand-dark">GH₵ 0</span>
-                            <div class="flex items-center text-amber-400 text-xs space-x-1">
-                                <i class="fa-solid fa-star"></i>
-                                <i class="fa-solid fa-star"></i>
-                                <i class="fa-solid fa-star"></i>
-                                <i class="fa-solid fa-star"></i>
-                                <i class="fa-solid fa-star-half-stroke"></i>
-                                <span class="text-brand-grayMuted text-xs ml-1">(12 customer reviews)</span>
-                            </div>
+                        <div class="product-detail-price-row">
+                            <span id="detailPrice" class="product-detail-price">GH₵ 0</span>
                         </div>
 
-                        <p id="detailDesc" class="text-sm text-brand-grayMuted mt-4 leading-relaxed">
+                        <p id="detailDesc" class="product-detail-description">
                             Crafted with high-quality, breathable fabric designed to give you a polished and comfortable fit for all casual and semi-formal occasions.
                         </p>
 
                         <!-- Size selection -->
-                        <div class="mt-6">
-                            <label class="block text-xs font-bold uppercase tracking-wider text-brand-dark mb-2">Select Size</label>
-                            <div class="flex space-x-3" id="detailSizes">
-                                <button onclick="selectDetailSize('S', this)" class="detail-size-btn border border-brand-border rounded-lg w-10 h-10 text-xs font-semibold hover:border-brand-gold">S</button>
-                                <button onclick="selectDetailSize('M', this)" class="detail-size-btn border-2 border-brand-gold bg-brand-gold/10 rounded-lg w-10 h-10 text-xs font-semibold">M</button>
-                                <button onclick="selectDetailSize('L', this)" class="detail-size-btn border border-brand-border rounded-lg w-10 h-10 text-xs font-semibold hover:border-brand-gold">L</button>
-                                <button onclick="selectDetailSize('XL', this)" class="detail-size-btn border border-brand-border rounded-lg w-10 h-10 text-xs font-semibold hover:border-brand-gold">XL</button>
-                            </div>
-                        </div>
-
-                        <!-- Color swatch preview -->
-                        <div class="mt-6">
-                            <label class="block text-xs font-bold uppercase tracking-wider text-brand-dark mb-2">Color Options</label>
-                            <div class="flex space-x-3">
-                                <div class="w-6 h-6 rounded-full bg-emerald-800 ring-2 ring-offset-2 ring-emerald-800 cursor-pointer"></div>
-                                <div class="w-6 h-6 rounded-full bg-amber-700 cursor-pointer"></div>
-                                <div class="w-6 h-6 rounded-full bg-black cursor-pointer"></div>
+                        <div class="product-detail-option">
+                            <label class="product-detail-label">Select Size</label>
+                            <div class="product-detail-sizes" id="detailSizes">
+                                <button type="button" onclick="selectDetailSize('S', this)" class="detail-size-btn">S</button>
+                                <button type="button" onclick="selectDetailSize('M', this)" class="detail-size-btn is-selected">M</button>
+                                <button type="button" onclick="selectDetailSize('L', this)" class="detail-size-btn">L</button>
+                                <button type="button" onclick="selectDetailSize('XL', this)" class="detail-size-btn">XL</button>
                             </div>
                         </div>
 
                         <!-- Quantity Selector -->
-                        <div class="mt-6 flex items-center space-x-4">
-                            <label class="text-xs font-bold uppercase tracking-wider text-brand-dark">Quantity</label>
-                            <div class="flex items-center border border-brand-border rounded-lg overflow-hidden bg-brand-sand">
-                                <button onclick="adjustDetailQty(-1)" class="px-3 py-1 font-bold text-brand-dark hover:bg-brand-gold/20">-</button>
-                                <span id="detailQty" class="px-4 py-1 text-sm font-semibold">1</span>
-                                <button onclick="adjustDetailQty(1)" class="px-3 py-1 font-bold text-brand-dark hover:bg-brand-gold/20">+</button>
+                        <div class="product-detail-quantity-row">
+                            <label class="product-detail-label">Quantity</label>
+                            <div class="product-detail-quantity">
+                                <button type="button" aria-label="Decrease quantity" onclick="adjustDetailQty(-1)">−</button>
+                                <span id="detailQty">1</span>
+                                <button type="button" aria-label="Increase quantity" onclick="adjustDetailQty(1)">+</button>
                             </div>
                         </div>
                     </div>
 
                     <!-- Actions -->
-                    <div class="space-y-3 pt-4 border-t border-brand-border">
-                        <div class="grid grid-cols-2 gap-4">
-                            <button id="addToCartBtn" class="w-full bg-brand-dark text-white hover:bg-brand-gold font-medium py-3 rounded-xl transition-colors shadow-md flex justify-center items-center space-x-2">
+                    <div class="product-detail-actions">
+                        <div class="product-detail-action-row">
+                            <button id="addToCartBtn" class="product-detail-add">
                                 <i class="fa-solid fa-bag-shopping"></i>
-                                <span>Add To Cart</span>
+                                <span>Add to Cart</span>
                             </button>
-                            <button id="buyNowBtn" class="w-full bg-brand-gold text-white hover:bg-brand-dark font-medium py-3 rounded-xl transition-colors shadow-md">
+                            <button id="buyNowBtn" class="product-detail-buy">
                                 Buy Now
                             </button>
                         </div>
 
                         <!-- Trust Badges -->
-                        <div class="bg-brand-sand/60 p-4 rounded-xl text-xs space-y-2 text-brand-grayMuted mt-4">
-                            <div class="flex items-center space-x-2">
-                                <i class="fa-solid fa-truck text-brand-gold"></i>
+                        <div class="product-detail-policies">
+                            <div>
+                                <i class="fa-solid fa-truck" aria-hidden="true"></i>
                                 <span>Fast Delivery across Greater Accra & Nationwide</span>
                             </div>
-                            <div class="flex items-center space-x-2">
-                                <i class="fa-solid fa-money-bill-transfer text-brand-gold"></i>
+                            <div>
+                                <i class="fa-solid fa-money-bill-transfer" aria-hidden="true"></i>
                                 <span>Pay with MTN MoMo, Telecel Cash or Card</span>
                             </div>
-                            <div class="flex items-center space-x-2">
-                                <i class="fa-solid fa-arrow-rotate-left text-brand-gold"></i>
+                            <div>
+                                <i class="fa-solid fa-arrow-rotate-left" aria-hidden="true"></i>
                                 <span>7 Days Easy Return Policy</span>
                             </div>
                         </div>
@@ -908,21 +888,26 @@
             }
 
             grid.innerHTML = itemsToRender.map(p => `
-                <div class="bg-white rounded-2xl border border-brand-border overflow-hidden group shadow-sm hover:shadow-md transition-all flex flex-col justify-between">
-                    <div class="relative aspect-[3/4] bg-brand-sand overflow-hidden cursor-pointer" onclick="openProductDetail('${p.id}')">
-                        <img src="${p.image}" alt="${p.title}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+                <article class="shop-product-card">
+                    <div class="shop-product-media">
+                        <div class="shop-product-image-link" onclick="openProductDetail('${p.id}')">
+                            <img src="${p.image}" alt="${p.title}" class="shop-product-image">
+                        </div>
+                        <button aria-label="Add ${p.title} to wishlist" onclick="showToast('Added to Wishlist!')" class="shop-product-wishlist">
+                            <i class="fa-regular fa-heart" aria-hidden="true"></i>
+                        </button>
                     </div>
-                    <div class="p-4 space-y-2">
-                        <span class="text-[10px] uppercase font-bold text-brand-gold tracking-wider">${p.category}</span>
-                        <h4 class="font-bold text-sm text-brand-dark truncate cursor-pointer" onclick="openProductDetail('${p.id}')">${p.title}</h4>
-                        <div class="flex justify-between items-center pt-1">
-                            <span class="font-bold text-brand-dark text-sm">GH₵ ${p.price}</span>
-                            <button onclick="quickAddToCart('${p.id}')" class="bg-brand-dark hover:bg-brand-gold text-white w-8 h-8 rounded-lg flex items-center justify-center transition-colors">
-                                <i class="fa-solid fa-plus text-xs"></i>
+                    <div class="shop-product-info">
+                        <span class="shop-product-category">${p.category}</span>
+                        <h2 class="shop-product-name" onclick="openProductDetail('${p.id}')">${p.title}</h2>
+                        <div class="shop-product-meta">
+                            <span class="shop-product-price">GH₵ ${p.price}</span>
+                            <button aria-label="Add ${p.title} to cart" onclick="quickAddToCart('${p.id}')" class="shop-quick-add">
+                                Add to Cart
                             </button>
                         </div>
                     </div>
-                </div>
+                </article>
             `).join('');
         }
 
@@ -996,6 +981,10 @@
             
             detailQuantity = 1;
             document.getElementById('detailQty').innerText = detailQuantity;
+            activeDetailSize = 'M';
+            document.querySelectorAll('.detail-size-btn').forEach(button => {
+                button.classList.toggle('is-selected', button.textContent.trim() === activeDetailSize);
+            });
 
             // Wire detail action buttons
             document.getElementById('addToCartBtn').onclick = () => {
@@ -1012,8 +1001,9 @@
 
         function selectDetailSize(size, el) {
             activeDetailSize = size;
-            document.querySelectorAll('.detail-size-btn').forEach(b => b.classList.remove('border-2', 'border-brand-gold', 'bg-brand-gold/10'));
-            el.classList.add('border-2', 'border-brand-gold', 'bg-brand-gold/10');
+            document.querySelectorAll('.detail-size-btn').forEach(button => {
+                button.classList.toggle('is-selected', button === el);
+            });
         }
 
         function adjustDetailQty(delta) {
