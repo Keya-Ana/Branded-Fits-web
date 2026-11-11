@@ -45,8 +45,8 @@
             <nav class="header-nav hidden md:flex" aria-label="Main navigation">
                 <button onclick="navigateTo('home')" id="nav-home" class="nav-link active-nav">Home</button>
                 <button onclick="navigateTo('shop')" id="nav-shop" class="nav-link">Shop</button>
-                <a href="#about" class="header-nav-anchor">About</a>
-                <a href="#contact" class="header-nav-anchor">Contact</a>
+                <button type="button" onclick="navigateTo('about')" id="nav-about" class="header-nav-anchor nav-link">About</button>
+                <button type="button" onclick="navigateTo('contact')" id="nav-contact" class="header-nav-anchor nav-link">Contact</button>
             </nav>
 
             <div class="header-utilities">
@@ -59,9 +59,9 @@
                     <i class="fa-regular fa-user" aria-hidden="true"></i>
                 </button>
 
-                <button aria-label="Wishlist" title="Wishlist" onclick="showToast('Wishlist saved!')" class="header-icon-button header-count-button">
+                <button id="wishlistButton" aria-label="Wishlist" title="Wishlist" onclick="navigateTo('wishlist')" class="header-icon-button header-count-button">
                     <i class="fa-regular fa-heart" aria-hidden="true"></i>
-                    <span id="wishlistCount" class="header-count header-count-gold">3</span>
+                    <span id="wishlistCount" class="header-count header-count-gold hidden">0</span>
                 </button>
 
                 <button aria-label="Shopping bag" title="Shopping bag" onclick="navigateTo('cart')" class="header-icon-button header-count-button">
@@ -79,8 +79,8 @@
                 </label>
                 <button onclick="navigateTo('home'); toggleMobileMenu()">Home</button>
                 <button onclick="navigateTo('shop'); toggleMobileMenu()">Shop All Outfits</button>
-                <a href="#about" onclick="toggleMobileMenu()">About</a>
-                <a href="#contact" onclick="toggleMobileMenu()">Contact</a>
+                <button type="button" onclick="navigateTo('about'); toggleMobileMenu()">About</button>
+                <button type="button" onclick="navigateTo('contact'); toggleMobileMenu()">Contact</button>
                 <button onclick="navigateTo('orders'); toggleMobileMenu()">My Account & Orders</button>
                 <button onclick="navigateTo('admin'); toggleMobileMenu()">Owner Dashboard</button>
             </div>
@@ -99,7 +99,7 @@
         <!-- ========================================== -->
         <!-- 1. HOME PAGE VIEW                         -->
         <!-- ========================================== -->
-        <section id="view-home" class="view-section">
+        <section id="view-home" class="view-section {% if initial_view|default('home', true) != 'home' %}hidden{% endif %}">
             <!-- Hero Banner -->
             <div class="home-hero">
                 <img src="https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?auto=format&fit=crop&q=80&w=800" alt="Fashion model wearing a contemporary outfit" class="home-hero-image">
@@ -260,6 +260,22 @@
             </div>
         </section>
 
+        <!-- WISHLIST VIEW -->
+        <section id="view-wishlist" class="view-section hidden wishlist-page max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="wishlist-heading">
+                <div>
+                    <span class="wishlist-eyebrow">Saved Styles</span>
+                    <h1 class="wishlist-title heading-serif">Your Wishlist</h1>
+                    <p id="wishlistItemCount" class="wishlist-count">0 items</p>
+                </div>
+                <button type="button" onclick="navigateTo('shop')" class="wishlist-continue">
+                    <span>Continue Shopping</span>
+                    <i class="fa-solid fa-arrow-right" aria-hidden="true"></i>
+                </button>
+            </div>
+            <div id="wishlistGrid" class="wishlist-grid shop-grid"></div>
+        </section>
+
         <!-- ========================================== -->
         <!-- 3. PRODUCT DETAIL PAGE VIEW                -->
         <!-- ========================================== -->
@@ -278,16 +294,14 @@
                 <!-- Product Info -->
                 <div class="product-detail-info">
                     <div>
-                        <span id="detailCategory" class="product-detail-category">Category</span>
-                        <h1 id="detailTitle" class="product-detail-title heading-serif">Product Title</h1>
+                        <span id="detailCategory" class="product-detail-category"></span>
+                        <h1 id="detailTitle" class="product-detail-title heading-serif"></h1>
                         
                         <div class="product-detail-price-row">
-                            <span id="detailPrice" class="product-detail-price">GH₵ 0</span>
+                            <span id="detailPrice" class="product-detail-price"></span>
                         </div>
 
-                        <p id="detailDesc" class="product-detail-description">
-                            Crafted with high-quality, breathable fabric designed to give you a polished and comfortable fit for all casual and semi-formal occasions.
-                        </p>
+                        <p id="detailDesc" class="product-detail-description"></p>
 
                         <!-- Size selection -->
                         <div class="product-detail-option">
@@ -597,19 +611,20 @@
                 <!-- Add Product Form -->
                 <div class="bg-white p-6 rounded-2xl border border-brand-border shadow-sm h-fit space-y-4">
                     <h3 class="font-bold text-lg heading-serif border-b border-brand-border pb-2">Upload New Product</h3>
+                    <p class="text-xs text-brand-grayMuted">Catalog is read-only here. Products are loaded from the server.</p>
                     <form id="addProductForm" onsubmit="handleAddProduct(event)" class="space-y-3">
                         <div>
                             <label class="block text-xs font-semibold text-brand-grayMuted mb-1">Product Title</label>
-                            <input type="text" id="newTitle" required placeholder="e.g. Linen Co-ord Set" class="w-full border border-brand-border rounded-lg p-2 text-xs">
+                            <input type="text" id="newTitle" disabled class="w-full border border-brand-border rounded-lg p-2 text-xs">
                         </div>
                         <div class="grid grid-cols-2 gap-2">
                             <div>
                                 <label class="block text-xs font-semibold text-brand-grayMuted mb-1">Price (GH₵)</label>
-                                <input type="number" id="newPrice" required placeholder="200" class="w-full border border-brand-border rounded-lg p-2 text-xs">
+                                <input type="number" id="newPrice" disabled class="w-full border border-brand-border rounded-lg p-2 text-xs">
                             </div>
                             <div>
                                 <label class="block text-xs font-semibold text-brand-grayMuted mb-1">Category</label>
-                                <select id="newCategory" class="w-full border border-brand-border rounded-lg p-2 text-xs bg-white">
+                                <select id="newCategory" disabled class="w-full border border-brand-border rounded-lg p-2 text-xs bg-white">
                                     <option value="Dresses">Dresses</option>
                                     <option value="Tops">Tops</option>
                                     <option value="Co-ords">Co-ords</option>
@@ -619,14 +634,14 @@
                         </div>
                         <div>
                             <label class="block text-xs font-semibold text-brand-grayMuted mb-1">Image URL</label>
-                            <input type="url" id="newImg" required placeholder="https://images.unsplash.com/..." class="w-full border border-brand-border rounded-lg p-2 text-xs">
+                            <input type="url" id="newImg" disabled class="w-full border border-brand-border rounded-lg p-2 text-xs">
                         </div>
                         <div>
                             <label class="block text-xs font-semibold text-brand-grayMuted mb-1">Description</label>
-                            <textarea id="newDesc" rows="2" placeholder="Item details..." class="w-full border border-brand-border rounded-lg p-2 text-xs"></textarea>
+                            <textarea id="newDesc" rows="2" disabled class="w-full border border-brand-border rounded-lg p-2 text-xs"></textarea>
                         </div>
-                        <button type="submit" class="w-full bg-brand-dark text-white hover:bg-brand-gold font-bold py-2.5 rounded-xl text-xs transition-colors">
-                            + Add Product to Store
+                        <button type="submit" disabled class="w-full bg-brand-dark text-white font-bold py-2.5 rounded-xl text-xs transition-colors">
+                            Catalog is read-only
                         </button>
                     </form>
                 </div>
@@ -677,12 +692,61 @@
             </div>
         </section>
 
+        <section id="view-about" class="view-section {% if initial_view|default('home', true) != 'about' %}hidden{% endif %} about-page">
+            <section class="about-hero">
+                <div class="about-hero-inner">
+                    <p class="about-eyebrow">Our Story</p>
+                    <h1 class="about-title heading-serif">Style that feels like you.</h1>
+                    <p class="about-intro">Branded Fits is a Ghanaian fashion boutique bringing together thoughtful style, quality pieces, and looks for every mood.</p>
+                </div>
+            </section>
+            <section class="about-story">
+                <div class="about-story-image" role="img" aria-label="A curated fashion look"></div>
+                <div class="about-story-copy">
+                    <p class="about-eyebrow">Look Good · Feel Good · Repeat</p>
+                    <h2 class="about-story-title heading-serif">Fashion for your everyday</h2>
+                    <p>We believe getting dressed should feel easy and confidence-boosting. From polished pieces to relaxed favourites, our collection is chosen to help you make every look your own.</p>
+                    <p>Based in Accra, we bring contemporary fashion to customers across Ghana with nationwide delivery.</p>
+                </div>
+            </section>
+        </section>
+
+        <section id="view-contact" class="view-section {% if initial_view|default('home', true) != 'contact' %}hidden{% endif %} contact-page">
+            <section class="contact-hero">
+                <div class="contact-hero-inner">
+                    <p class="about-eyebrow">We're here to help</p>
+                    <h1 class="about-title heading-serif">Get in touch.</h1>
+                    <p class="about-intro">Questions about an outfit, your order, or delivery? Reach out using the contact details below and our team will be happy to help.</p>
+                </div>
+            </section>
+            <section class="contact-details">
+                <div class="contact-grid">
+                    <a href="tel:+233551234567" class="contact-card">
+                        <span class="contact-icon" aria-hidden="true"><i class="fa-solid fa-phone"></i></span>
+                        <h2 class="contact-card-title heading-serif">Call us</h2>
+                        <p>+233 55 123 4567</p>
+                    </a>
+                    <a href="mailto:orders@brandedfits.com" class="contact-card">
+                        <span class="contact-icon" aria-hidden="true"><i class="fa-solid fa-envelope"></i></span>
+                        <h2 class="contact-card-title heading-serif">Email us</h2>
+                        <p class="contact-email">orders@brandedfits.com</p>
+                    </a>
+                    <div class="contact-card">
+                        <span class="contact-icon" aria-hidden="true"><i class="fa-solid fa-location-dot"></i></span>
+                        <h2 class="contact-card-title heading-serif">Find us</h2>
+                        <p>Accra, Greater Accra Region, Ghana</p>
+                    </div>
+                </div>
+                <p class="contact-delivery-note">We deliver nationwide across Ghana.</p>
+            </section>
+        </section>
+
     </main>
 
     <!-- FOOTER -->
     <footer class="bg-brand-dark text-white pt-12 pb-8 border-t border-brand-gold/20 mt-16">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 grid grid-cols-1 md:grid-cols-4 gap-8">
-            <div id="about" class="space-y-3">
+            <div id="footer-about" class="space-y-3">
                 <div class="flex items-center space-x-2">
                     <div class="w-7 h-7 border border-brand-gold rounded-full flex items-center justify-center bg-brand-charcoal">
                         <i class="fa-solid fa-shirt text-brand-gold text-xs"></i>
@@ -697,6 +761,8 @@
                 <ul class="space-y-2 text-xs text-gray-300">
                     <li><button onclick="navigateTo('home')" class="hover:text-brand-gold">Home</button></li>
                     <li><button onclick="navigateTo('shop')" class="hover:text-brand-gold">Shop All Outfits</button></li>
+                    <li><button onclick="navigateTo('about')" class="hover:text-brand-gold">About</button></li>
+                    <li><button onclick="navigateTo('contact')" class="hover:text-brand-gold">Contact</button></li>
                     <li><button onclick="navigateTo('orders')" class="hover:text-brand-gold">My Orders</button></li>
                     <li><button onclick="navigateTo('admin')" class="hover:text-brand-gold">Owner Portal</button></li>
                 </ul>
@@ -711,7 +777,7 @@
                 </div>
             </div>
 
-            <div id="contact">
+            <div id="footer-contact">
                 <h4 class="font-bold text-sm text-brand-gold mb-3 uppercase tracking-wider">Contact & Location</h4>
                 <p class="text-xs text-gray-300 leading-relaxed">
                     Accra, Greater Accra Region, Ghana <br>
@@ -728,57 +794,9 @@
 
     <!-- JAVASCRIPT APPLICATION LOGIC -->
     <script>
-        // INITIAL SAMPLE PRODUCT DATA MATCHING THE BRAND BOARD
-        const initialProducts = [
-            {
-                id: 'p1',
-                title: 'Elegant Midi Dress',
-                price: 180,
-                category: 'Dresses',
-                image: 'https://images.unsplash.com/photo-1595777457583-95e059d581b8?auto=format&fit=crop&q=80&w=600',
-                desc: 'This elegant midi dress is perfect for casual outings, date nights or special occasions. Made with high-quality fabric for ultimate comfort.'
-            },
-            {
-                id: 'p2',
-                title: 'Casual Co-ord Set',
-                price: 160,
-                category: 'Co-ords',
-                image: 'https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?auto=format&fit=crop&q=80&w=600',
-                desc: 'Chic two-piece co-ord set designed to keep you stylish and comfortable throughout the day.'
-            },
-            {
-                id: 'p3',
-                title: 'White Top & Pants',
-                price: 190,
-                category: 'Co-ords',
-                image: 'https://images.unsplash.com/photo-1509631179647-0177331693ae?auto=format&fit=crop&q=80&w=600',
-                desc: 'Crisp white two-piece ensemble offering a sharp, modern fashion silhouette.'
-            },
-            {
-                id: 'p4',
-                title: 'Bodycon Dress',
-                price: 170,
-                category: 'Dresses',
-                image: 'https://images.unsplash.com/photo-1566174053879-31528523f8ae?auto=format&fit=crop&q=80&w=600',
-                desc: 'Flattering bodycon dress tailored to enhance curves while ensuring total ease of movement.'
-            },
-            {
-                id: 'p5',
-                title: 'Classic Blazer Set',
-                price: 250,
-                category: 'Co-ords',
-                image: 'https://images.unsplash.com/photo-1548624313-0396c75e4b1a?auto=format&fit=crop&q=80&w=600',
-                desc: 'Sophisticated power blazer set suitable for business meetings or sleek evening wear.'
-            },
-            {
-                id: 'p6',
-                title: 'Sleek Jumpsuit',
-                price: 200,
-                category: 'Jumpsuits',
-                image: 'https://images.unsplash.com/photo-1539109136881-3be0616acf4b?auto=format&fit=crop&q=80&w=600',
-                desc: 'One-piece trendy jumpsuit featuring tailored waistline and breathable fabric.'
-            }
-        ];
+        const initialView = {{ initial_view|default('home', true)|tojson }};
+        const viewPaths = { about: '/about', contact: '/contact' };
+        const pathViews = { '/': 'home', '/about': 'about', '/contact': 'contact' };
 
         // INITIAL DEMO ORDERS
         const initialOrders = [
@@ -788,12 +806,76 @@
         ];
 
         // APP STATE (PERFORM LOCALSTORAGE LOAD/SAVE)
-        let products = JSON.parse(localStorage.getItem('bf_products')) || initialProducts;
+        function isBackendProductId(id) {
+            return /^\d+$/.test(String(id ?? ''));
+        }
+
+        function normalizeCachedProduct(product) {
+            if (!product || !isBackendProductId(product.id)) return null;
+            const title = product.title || product.name;
+            const price = Number(product.price);
+            if (typeof title !== 'string' || !title.trim() || !Number.isFinite(price) || typeof product.image !== 'string' || !product.image.trim()) {
+                return null;
+            }
+
+            return {
+                id: String(product.id),
+                title,
+                price,
+                category: product.category == null ? '' : String(product.category),
+                image: product.image,
+                desc: typeof product.desc === 'string' && product.desc.trim()
+                    ? product.desc
+                    : typeof product.description === 'string' && product.description.trim()
+                        ? product.description
+                        : 'Description is not available for this item.',
+                sizes: Array.isArray(product.sizes) ? product.sizes.map(String) : null
+            };
+        }
+
+        function loadCachedCart() {
+            try {
+                const cached = JSON.parse(localStorage.getItem('bf_cart') || '[]');
+                if (!Array.isArray(cached)) return [];
+                const validCart = cached.flatMap(item => {
+                    const product = normalizeCachedProduct(item?.product);
+                    const qty = Number(item?.qty);
+                    if (!product || !Number.isInteger(qty) || qty < 1) return [];
+                    return [{ ...item, product, qty }];
+                });
+                localStorage.setItem('bf_cart', JSON.stringify(validCart));
+                return validCart;
+            } catch (error) {
+                localStorage.setItem('bf_cart', '[]');
+                return [];
+            }
+        }
+
+        function loadCachedWishlist() {
+            try {
+                const cached = JSON.parse(localStorage.getItem('bf_wishlist') || '[]');
+                if (!Array.isArray(cached)) return [];
+                const validIds = [...new Set(cached.filter(isBackendProductId).map(String))];
+                localStorage.setItem('bf_wishlist', JSON.stringify(validIds));
+                return validIds;
+            } catch (error) {
+                localStorage.setItem('bf_wishlist', '[]');
+                return [];
+            }
+        }
+
+        try {
+            localStorage.removeItem('bf_products');
+        } catch (error) {
+            console.warn('Unable to clear the legacy product cache:', error);
+        }
+
+        let products = [];
+        let productLoadState = 'loading';
+        let productLoadError = '';
         let orders = JSON.parse(localStorage.getItem('bf_orders')) || initialOrders;
-        let cart = JSON.parse(localStorage.getItem('bf_cart')) || [
-            { product: initialProducts[0], size: 'M', qty: 1 },
-            { product: initialProducts[1], size: 'M', qty: 1 }
-        ];
+        let cart = loadCachedCart();
+        let wishlist = loadCachedWishlist();
         
         let selectedProductForDetail = null;
         let activeDetailSize = 'M';
@@ -802,38 +884,149 @@
 
         // ON LOAD INITIALIZATION
         window.addEventListener('DOMContentLoaded', () => {
+            navigateTo(initialView, false);
             renderFeaturedGrid();
             renderShopGrid();
+            updateWishlistUI();
             updateCartUI();
             renderUserOrdersTable();
             renderAdminTables();
             updateAdminStats();
+            loadProductsFromStore();
         });
 
         // SAVE STATE TO LOCALSTORAGE
         function saveState() {
-            localStorage.setItem('bf_products', JSON.stringify(products));
             localStorage.setItem('bf_orders', JSON.stringify(orders));
             localStorage.setItem('bf_cart', JSON.stringify(cart));
+            localStorage.setItem('bf_wishlist', JSON.stringify(wishlist));
+        }
+
+        async function loadProductsFromStore() {
+            products = [];
+            productLoadState = 'loading';
+            productLoadError = '';
+            renderFeaturedGrid();
+            renderShopGrid();
+            updateWishlistUI();
+            updateCartUI();
+            if (!document.getElementById('view-wishlist').classList.contains('hidden')) {
+                renderWishlist();
+            }
+
+            try {
+                const response = await fetch('/api/products', {
+                    method: 'GET',
+                    headers: { Accept: 'application/json' }
+                });
+                const apiProducts = await response.json();
+                if (!response.ok) {
+                    throw new Error(apiProducts.error || 'The product catalog could not be loaded.');
+                }
+                if (!Array.isArray(apiProducts)) {
+                    throw new Error('The product catalog returned an invalid response.');
+                }
+
+                const productsById = new Map();
+                for (const apiProduct of apiProducts) {
+                    if (!apiProduct || !isBackendProductId(apiProduct.id) || !apiProduct.name || apiProduct.price == null || !apiProduct.image) {
+                        throw new Error('A product in the catalog is missing required information.');
+                    }
+
+                    const id = String(apiProduct.id);
+                    const price = Number(apiProduct.price);
+                    if (!Number.isFinite(price)) {
+                        throw new Error(`Product ${id} has an invalid price.`);
+                    }
+                    if (productsById.has(id)) continue;
+
+                    const description = typeof apiProduct.description === 'string' && apiProduct.description.trim()
+                        ? apiProduct.description
+                        : 'Description is not available for this item.';
+
+                    productsById.set(id, {
+                        id,
+                        title: String(apiProduct.name),
+                        price,
+                        category: apiProduct.category == null ? '' : String(apiProduct.category),
+                        image: String(apiProduct.image),
+                        desc: description,
+                        sizes: Array.isArray(apiProduct.sizes) ? apiProduct.sizes.map(String) : null
+                    });
+                }
+
+                products = Array.from(productsById.values());
+                productLoadState = products.length ? 'ready' : 'empty';
+                const productsByServerId = new Map(products.map(product => [product.id, product]));
+                cart = cart.flatMap(item => {
+                    const serverProduct = productsByServerId.get(String(item.product.id));
+                    return serverProduct ? [{ ...item, product: serverProduct }] : [];
+                });
+                wishlist = wishlist.filter(productId => productsByServerId.has(String(productId)));
+                localStorage.setItem('bf_cart', JSON.stringify(cart));
+                localStorage.setItem('bf_wishlist', JSON.stringify(wishlist));
+            } catch (error) {
+                console.error('Unable to load products from the catalog API:', error);
+                products = [];
+                productLoadState = 'error';
+                productLoadError = 'The live catalog could not be loaded. No products are available until the connection is restored.';
+            }
+
+            renderFeaturedGrid();
+            const searchInputs = Array.from(document.querySelectorAll('input[onkeyup="handleSearch(event)"]'));
+            const activeSearchInput = searchInputs.find(input => input.value.trim());
+            if (activeSearchInput) {
+                handleSearch({ target: activeSearchInput });
+            } else {
+                applyFilters();
+            }
+            updateWishlistUI();
+            updateCartUI();
+            if (!document.getElementById('view-wishlist').classList.contains('hidden')) {
+                renderWishlist();
+            }
+            renderAdminTables();
+            updateAdminStats();
+        }
+
+        function productLoadNotice() {
+            if (productLoadState !== 'error') return '';
+            return `<div class="product-load-notice" role="alert"><span>${productLoadError}</span><button type="button" onclick="loadProductsFromStore()">Retry</button></div>`;
+        }
+
+        function productGridState(message) {
+            return `<div class="product-grid-state" role="status">${message}</div>`;
         }
 
         // VIEW NAVIGATION CONTROLLER
-        function navigateTo(viewId) {
+        function navigateTo(viewId, updateHistory = true) {
+            const target = document.getElementById(`view-${viewId}`);
+            if (!target) return;
+
+            const nextPath = viewPaths[viewId] || '/';
+            if (updateHistory && window.location.pathname !== nextPath) {
+                window.history.pushState({ viewId }, '', nextPath);
+            }
+
             // Hide all sections
             document.querySelectorAll('.view-section').forEach(sec => sec.classList.add('hidden'));
             
             // Show requested view
-            const target = document.getElementById(`view-${viewId}`);
-            if (target) {
-                target.classList.remove('hidden');
-                window.scrollTo({ top: 0, behavior: 'smooth' });
-            }
+            target.classList.remove('hidden');
+            window.scrollTo({ top: 0, behavior: 'smooth' });
 
             // Update Nav Active Styling
             document.querySelectorAll('.nav-link').forEach(link => link.classList.remove('active-nav'));
             const activeNavBtn = document.getElementById(`nav-${viewId}`);
             if (activeNavBtn) activeNavBtn.classList.add('active-nav');
+
+            if (viewId === 'wishlist') renderWishlist();
         }
+
+        window.addEventListener('popstate', event => {
+            const viewId = event.state?.viewId || pathViews[window.location.pathname] || 'home';
+            navigateTo(viewId, false);
+        });
 
         function toggleMobileMenu() {
             const menu = document.getElementById('mobileMenu');
@@ -850,14 +1043,77 @@
             }, 3000);
         }
 
+        function toggleWishlist(productId) {
+            const product = products.find(item => String(item.id) === String(productId));
+            if (!product) return;
+
+            const normalizedId = String(product.id);
+            const wishlistIndex = wishlist.indexOf(normalizedId);
+            if (wishlistIndex === -1) {
+                wishlist.push(normalizedId);
+                showToast(`${product.title} added to your wishlist`);
+            } else {
+                wishlist.splice(wishlistIndex, 1);
+                showToast(`${product.title} removed from your wishlist`);
+            }
+
+            saveState();
+            updateWishlistUI();
+            if (!document.getElementById('view-wishlist').classList.contains('hidden')) {
+                renderWishlist();
+            }
+        }
+
+        function updateWishlistUI() {
+            const count = document.getElementById('wishlistCount');
+            const button = document.getElementById('wishlistButton');
+            const visibleWishlist = productLoadState === 'ready'
+                ? wishlist.filter(productId => products.some(product => String(product.id) === String(productId)))
+                : [];
+            count.textContent = visibleWishlist.length;
+            count.classList.toggle('hidden', visibleWishlist.length === 0);
+            button.setAttribute('aria-label', `Wishlist, ${visibleWishlist.length} saved ${visibleWishlist.length === 1 ? 'item' : 'items'}`);
+            button.title = `${visibleWishlist.length} saved ${visibleWishlist.length === 1 ? 'item' : 'items'}`;
+
+            document.querySelectorAll('[data-wishlist-product-id]').forEach(wishlistButton => {
+                const isSaved = wishlist.includes(wishlistButton.dataset.wishlistProductId);
+                const productName = wishlistButton.dataset.productName || 'product';
+                wishlistButton.setAttribute('aria-pressed', String(isSaved));
+                wishlistButton.setAttribute('aria-label', `${isSaved ? 'Remove' : 'Add'} ${productName} ${isSaved ? 'from' : 'to'} wishlist`);
+                wishlistButton.classList.toggle('is-saved', isSaved);
+                const icon = wishlistButton.querySelector('i');
+                icon.classList.toggle('fa-solid', isSaved);
+                icon.classList.toggle('fa-regular', !isSaved);
+            });
+        }
+
+        function renderWishlist() {
+            const savedProducts = products.filter(product => wishlist.includes(String(product.id)));
+            document.getElementById('wishlistItemCount').textContent = `${savedProducts.length} ${savedProducts.length === 1 ? 'item' : 'items'}`;
+            renderShopGrid(savedProducts, 'wishlistGrid');
+        }
+
         // RENDER FEATURED GRID
         function renderFeaturedGrid() {
             const grid = document.getElementById('featuredGrid');
-            grid.innerHTML = products.slice(0, 4).map(p => `
+            if (productLoadState === 'loading') {
+                grid.innerHTML = productGridState('Loading featured styles...');
+                return;
+            }
+            if (productLoadState === 'empty') {
+                grid.innerHTML = productGridState('No outfits are available right now.');
+                return;
+            }
+            if (productLoadState === 'error' && products.length === 0) {
+                grid.innerHTML = `${productLoadNotice()}${productGridState('No products are available while the catalog is unreachable.')}`;
+                return;
+            }
+
+            grid.innerHTML = `${productLoadNotice()}${products.slice(0, 4).map(p => `
                 <article class="home-product-card group">
                     <div class="home-product-image-wrap">
                         <img src="${p.image}" alt="${p.title}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
-                        <button aria-label="Add ${p.title} to wishlist" onclick="showToast('Added to Wishlist!')" class="home-product-wishlist">
+                        <button data-wishlist-product-id="${p.id}" data-product-name="${p.title}" aria-label="Add ${p.title} to wishlist" aria-pressed="false" onclick="toggleWishlist('${p.id}')" class="home-product-wishlist">
                             <i class="fa-regular fa-heart text-xs" aria-hidden="true"></i>
                         </button>
                     </div>
@@ -871,29 +1127,39 @@
                         </div>
                     </div>
                 </article>
-            `).join('');
+            `).join('')}`;
+            updateWishlistUI();
         }
 
         // RENDER SHOP GRID & FILTERING
-        function renderShopGrid(itemsToRender = products) {
-            const grid = document.getElementById('shopGrid');
+        function renderShopGrid(itemsToRender = products, gridId = 'shopGrid') {
+            const grid = document.getElementById(gridId);
+            if (productLoadState === 'loading') {
+                grid.innerHTML = productGridState('Loading outfits...');
+                return;
+            }
+            if (productLoadState === 'empty' && gridId !== 'wishlistGrid') {
+                grid.innerHTML = productGridState('No products are available right now.');
+                return;
+            }
+            if (productLoadState === 'error' && products.length === 0) {
+                grid.innerHTML = `${productLoadNotice()}${productGridState('No products are available while the catalog is unreachable.')}`;
+                return;
+            }
             if (itemsToRender.length === 0) {
-                grid.innerHTML = `
-                    <div class="col-span-full py-12 text-center text-brand-grayMuted">
-                        <i class="fa-solid fa-shirt text-4xl mb-2 text-brand-border"></i>
-                        <p>No outfits match your filter criteria.</p>
-                    </div>
-                `;
+                grid.innerHTML = gridId === 'wishlistGrid'
+                    ? `${productLoadNotice()}<div class="wishlist-empty"><i class="fa-regular fa-heart" aria-hidden="true"></i><h2 class="heading-serif">Your wishlist is empty</h2><p>Save the styles you love and they will be collected here.</p><button type="button" onclick="navigateTo('shop')">Explore the collection</button></div>`
+                    : `${productLoadNotice()}<div class="col-span-full py-12 text-center text-brand-grayMuted"><i class="fa-solid fa-shirt text-4xl mb-2 text-brand-border"></i><p>No outfits match your filter criteria.</p></div>`;
                 return;
             }
 
-            grid.innerHTML = itemsToRender.map(p => `
+            grid.innerHTML = `${productLoadNotice()}${itemsToRender.map(p => `
                 <article class="shop-product-card">
                     <div class="shop-product-media">
                         <div class="shop-product-image-link" onclick="openProductDetail('${p.id}')">
                             <img src="${p.image}" alt="${p.title}" class="shop-product-image">
                         </div>
-                        <button aria-label="Add ${p.title} to wishlist" onclick="showToast('Added to Wishlist!')" class="shop-product-wishlist">
+                        <button data-wishlist-product-id="${p.id}" data-product-name="${p.title}" aria-label="Add ${p.title} to wishlist" aria-pressed="false" onclick="toggleWishlist('${p.id}')" class="shop-product-wishlist">
                             <i class="fa-regular fa-heart" aria-hidden="true"></i>
                         </button>
                     </div>
@@ -908,7 +1174,8 @@
                         </div>
                     </div>
                 </article>
-            `).join('');
+            `).join('')}`;
+            updateWishlistUI();
         }
 
         // FILTER CONTROL FUNCTIONS
@@ -1045,11 +1312,23 @@
         }
 
         function updateCartUI() {
+            const cartList = document.getElementById('cartItemsList');
+
+            if (productLoadState === 'loading') {
+                document.getElementById('cartCount').innerText = '0';
+                cartList.innerHTML = '<div class="product-grid-state" role="status">Loading your cart…</div>';
+                return;
+            }
+
+            if (productLoadState === 'error') {
+                document.getElementById('cartCount').innerText = '0';
+                cartList.innerHTML = `<div class="product-grid-state" role="alert">${productLoadError}<button type="button" onclick="loadProductsFromStore()">Retry</button></div>`;
+                return;
+            }
+
             // Update cart count badge
             const totalItems = cart.reduce((acc, item) => acc + item.qty, 0);
             document.getElementById('cartCount').innerText = totalItems;
-
-            const cartList = document.getElementById('cartItemsList');
             
             if (cart.length === 0) {
                 cartList.innerHTML = `
@@ -1200,43 +1479,11 @@
         // OWNER ADMIN DASHBOARD LOGIC
         function handleAddProduct(e) {
             e.preventDefault();
-            const title = document.getElementById('newTitle').value;
-            const price = parseFloat(document.getElementById('newPrice').value);
-            const category = document.getElementById('newCategory').value;
-            const image = document.getElementById('newImg').value;
-            const desc = document.getElementById('newDesc').value || 'High-quality fashion outfit.';
-
-            const newProd = {
-                id: 'p' + Date.now(),
-                title,
-                price,
-                category,
-                image,
-                desc
-            };
-
-            products.unshift(newProd);
-            saveState();
-
-            // Refresh UI grids
-            renderFeaturedGrid();
-            renderShopGrid();
-            renderAdminTables();
-            updateAdminStats();
-
-            // Reset form
-            document.getElementById('addProductForm').reset();
-            showToast('New product added to store!');
+            showToast('Catalog is read-only. Products are loaded from the server.');
         }
 
-        function deleteProduct(id) {
-            products = products.filter(p => p.id !== id);
-            saveState();
-            renderFeaturedGrid();
-            renderShopGrid();
-            renderAdminTables();
-            updateAdminStats();
-            showToast('Product removed');
+        function deleteProduct() {
+            showToast('Catalog is read-only. Products are loaded from the server.');
         }
 
         function updateOrderStatus(orderId, newStatus) {
@@ -1263,8 +1510,8 @@
                     <td class="p-3 text-brand-grayMuted">${p.category}</td>
                     <td class="p-3 font-semibold text-brand-gold">GH₵ ${p.price}</td>
                     <td class="p-3 text-right">
-                        <button onclick="deleteProduct('${p.id}')" class="text-red-500 hover:text-red-700 font-semibold text-xs">
-                            Remove
+                        <button type="button" disabled title="Products are read-only in this view" class="text-brand-muted font-semibold text-xs">
+                            Read-only
                         </button>
                     </td>
                 </tr>
@@ -1308,11 +1555,6 @@
   const API_BASE_URL = (window.location.hostname === '127.0.0.1' || window.location.hostname === 'localhost')
     ? 'http://127.0.0.1:5000'
     : 'https://branded-fits-backend.onrender.com';
-
-  // 2. Your existing product upload function
-  async function handleAddProduct(event) {
-    // ... your existing Cloudinary & upload code ...
-  }
 
   // 3. PASTE YOUR processMoMoPayment FUNCTION RIGHT HERE:
   function processMoMoPayment(orderData) {
